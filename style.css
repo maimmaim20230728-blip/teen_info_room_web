@@ -86,7 +86,7 @@ body{
 /* 初回一度きり案内の本文(改行を活かすため pre-line。textContentのみでレイアウト) */
 .intro-text{
   color:var(--fg); font-size:16px; line-height:2; margin:0 0 18px;
-  white-space:pre-line; text-align:left;
+  white-space:pre-line; text-align:start;   /* start=LTRで左・RTL(ar)で右 */
 }
 
 /* ---- カード(おなじひと / しっておく / まどぐち) ---- */
@@ -163,7 +163,7 @@ body{
 }
 .memo-item-date{ color:var(--sub); font-size:13px; margin-bottom:6px; }
 .memo-item-body{ font-size:16px; line-height:1.8; white-space:pre-wrap; -webkit-user-select:text; user-select:text; }
-.memo-item-foot{ margin-top:8px; text-align:right; }
+.memo-item-foot{ margin-top:8px; text-align:end; }   /* end=LTRで右・RTL(ar)で左 */
 .memo-empty{ color:var(--sub); font-size:15px; text-align:center; padding:14px; }
 
 .btn-line{
@@ -188,12 +188,14 @@ body{
   -webkit-user-select:text; user-select:text;
 }
 #set-exit-save{ margin-top:10px; }
-.tap-choices{ display:flex; gap:8px; }
+.tap-choices{ display:flex; gap:8px; flex-wrap:wrap; }
 .tap-choices .tap-opt{
   flex:1; background:transparent; color:var(--sub);
   border:1px solid var(--line); border-radius:12px;
   padding:10px 0; font-size:16px; cursor:pointer;
 }
+/* 🌐言語シートは12言語=折り返して内容幅で並べる(等分割にしない) */
+#lang-choices .tap-opt{ flex:0 1 auto; padding:10px 14px; }
 .tap-choices .tap-opt.sel{ color:#221a08; background:var(--accent); border-color:var(--accent); font-weight:700; }
 
 .credit{ margin:8px 0 0; }

@@ -5,6 +5,7 @@
    ・v0.5: メモの部屋の書きかけを kyukei.draft に保持(再起動で復元・しまうと消える・可視領域に出ない)
    ・v0.6: データタブを4カードに再編(学年別=約15/約17/約24人に1人・毎日数時間・だれにも話していない・ひとりの時間)
    ・v1.0: 日英2言語(lang.js)。既定=navigator判定/setLangで全画面切替/ja文言ゴールデン一致/en=5データ(Around the world)+7窓口/🌐は連打対象外
+   ・v1.1: 12言語(+de/fr/es/it/pt/nl/sv/ko/zh/ar)。キー完全一致(パリティ)/各言語描画(データ5・まどぐち2)/ar dir=rtl/en仮値の残留なし/🌐シート12言語
    ・起動時に例外なし / 4画面(ひといき/おなじひと/しっておく/まどぐち)の切替 / 各カード表示
    ・可視UIに メモ・せってい・そよぎ の入口/痕跡が無い(v0.3)
    ・初回だけ一度きり案内が出て「わかった」でintroShown=true・以後(リロード)は出ない(v0.3)
@@ -385,6 +386,62 @@ check('🌐 を何回タップしてもメモの部屋は開かない(連打対�
 check('🌐 タップで言語シートが開く', !langInst.byId('lang-sheet').classList.contains('hidden'));
 tap(langInst.byId('hd-title')); tap(langInst.byId('hd-title')); tap(langInst.byId('hd-title'));
 check('アプリ名を3連打するとメモの部屋が開く(連打カウントは🌐の影響を受けない)', !langInst.byId('memo-view').classList.contains('hidden'));
+
+/* ---- [v1.1 12言語] キー完全一致(パリティ)・各言語描画・ar RTL・en仮値の残留なし ---- */
+console.log('[v1.1 12言語] パリティ/各言語描画/ar RTL/翻訳欠落(en仮値残留)検出');
+const KL = sandbox.KYUKEI_LANG;
+const L12 = ['ja','en','de','fr','es','it','pt','nl','sv','ko','zh','ar'];
+check('KYUKEI_LANG に12言語ある', !!KL && L12.every(c => KL[c] && typeof KL[c] === 'object'));
+/* 葉キーのパス集合をenと全言語で完全一致 */
+function flatKeys(o, pfx){
+  let acc = [];
+  if(Array.isArray(o)) o.forEach((v, i) => acc = acc.concat(flatKeys(v, pfx + '[' + i + ']')));
+  else if(o && typeof o === 'object') Object.keys(o).forEach(k => acc = acc.concat(flatKeys(o[k], pfx ? pfx + '.' + k : k)));
+  else acc.push(pfx);
+  return acc;
+}
+const enKeys = flatKeys(KL.en, '').sort().join('|');
+const parityFails = L12.filter(c => flatKeys(KL[c], '').sort().join('|') !== enKeys);
+check('全12言語のキー構造が完全一致(パリティ)', parityFails.length === 0);
+if(parityFails.length) console.log('    パリティ不一致: ' + parityFails.join(','));
+/* 各言語に切替→appName=Teen Info Room(追加10言語)・データ5枚・まどぐち2枚・例外なし */
+const ADDED = ['de','fr','es','it','pt','nl','sv','ko','zh','ar'];
+let renderFails = [];
+ADDED.forEach(c => {
+  try{
+    sandbox.setLang(c);
+    const app = byId('hd-title').textContent;
+    const dcards = byId('onaji-list').children.filter(x => x.className === 'card').length;
+    const mcards = byId('madoguchi-list').children.filter(x => x.className === 'card').length;
+    if(app !== 'Teen Info Room') renderFails.push(c + ' appName=' + app);
+    if(dcards !== 5) renderFails.push(c + ' onaji=' + dcards);
+    if(mcards !== 2) renderFails.push(c + ' mado=' + mcards);
+  }catch(e){ renderFails.push(c + ' EXC ' + e.message); }
+});
+check('追加10言語: appName=Teen Info Room・データ5枚・まどぐち2枚・例外なし', renderFails.length === 0);
+if(renderFails.length) console.log('    ' + renderFails.join(' / '));
+/* ar は dir=rtl・戻すと ltr */
+sandbox.setLang('ar');
+check('ar: html dir=rtl・appName・呼吸フェーズがarで描画', documentStub.documentElement.dir === 'rtl' && byId('hd-title').textContent === 'Teen Info Room' && byId('breath-phase').textContent === KL.ar.breathIn);
+sandbox.setLang('ja');
+check('ja復帰: dir=ltr', documentStub.documentElement.dir === 'ltr');
+/* 翻訳欠落(en仮値の残留)検出 */
+const PROSE = ['onelines[0]','madoIntro','memoSaved','breathIn','musicOn','shitte[0].body'];
+function getPath(o, p){ return p.split(/\.|\[|\]/).filter(Boolean).reduce((a, k) => (a == null ? a : a[k]), o); }
+let leak = [];
+ADDED.forEach(c => PROSE.forEach(p => { if(getPath(KL[c], p) === getPath(KL.en, p)) leak.push(c + '.' + p); }));
+check('追加10言語の主要文言がenと異なる(en仮値の残留なし)', leak.length === 0);
+if(leak.length) console.log('    en残留: ' + leak.join(','));
+check('追加10言語のappNameはTeen Info Room(en同一・ブランド固定=意図的)', ADDED.every(c => KL[c].appName === 'Teen Info Room'));
+check('追加10言語のtapUnitは空(仕様未記載=en準拠)', ADDED.every(c => KL[c].tapUnit === ''));
+/* 🌐言語シートは12言語ぶんのボタン */
+const li12 = makeInstance({});
+tap(li12.byId('btn-lang'));
+check('🌐シートに12言語ボタン', li12.byId('lang-choices').children.filter(x => x.tagName === 'BUTTON').length === 12);
+/* ja/enゴールデン(移設不変)の再確認 */
+check('ja ゴールデン(再): 一言[0]/しっておく[0]', KL.ja.onelines[0] === 'ゆっくりした呼吸には、心拍を落ちつかせる はたらきがあります。' && KL.ja.shitte[0].title === 'ヤングケアラーという言葉');
+check('en ゴールデン(再): oneline[0]/tab', KL.en.onelines[0] === 'Slow breathing is known to calm the heart rate.' && KL.en.tab.hitoiki === 'Breathe');
+sandbox.setLang('ja');
 
 /* ---- [v0.3 リロード] 同じ端末(store)で再起動: 案内は出ない・両オーバーレイは閉 ---- */
 console.log('[v0.3 リロード] introShown保持で案内が出ない・メモの部屋/せってい は閉');
