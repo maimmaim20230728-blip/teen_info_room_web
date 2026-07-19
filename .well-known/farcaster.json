@@ -1,0 +1,21 @@
+{
+  "accountAssociation": {
+    "header": "",
+    "payload": "",
+    "signature": ""
+  },
+  "miniapp": {
+    "version": "1",
+    "name": "Teen Info Room",
+    "iconUrl": "https://teen-info-room-web.vercel.app/icons/icon-512.png",
+    "homeUrl": "https://teen-info-room-web.vercel.app/",
+    "imageUrl": "https://teen-info-room-web.vercel.app/icons/fc-card-3x2.png",
+    "buttonTitle": "🌙 ひらく / Open",
+    "splashImageUrl": "https://teen-info-room-web.vercel.app/icons/icon-512.png",
+    "splashBackgroundColor": "#1e2230",
+    "subtitle": "しらべる・ひとやすみ・10代の部屋",
+    "description": "10代のための情報アプリ。家族のケアを担う10代についてのデータと知識、使える相談窓口、そして深呼吸でひとやすみできる部屋。無料・オフライン・登録なし・日英対応。",
+    "primaryCategory": "education",
+    "tags": ["teens", "wellbeing", "info", "japan", "soyogi"]
+  }
+}

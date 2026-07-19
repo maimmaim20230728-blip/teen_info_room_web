@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1e2230">
+<title>10代の情報室</title>
+<meta name="description" content="10代のための情報アプリ。家族のケアを担う10代についてのデータと知識、使える相談窓口、そして深呼吸でひとやすみできる部屋。無料・オフライン・登録なし・日英対応。">
+<!-- OGP / X（Twitter）リンクカード -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="10代の情報室 / Teen Info Room">
+<meta property="og:description" content="10代のための情報アプリ。家族のケアを担う10代についてのデータと知識、使える相談窓口、そして深呼吸でひとやすみできる部屋。無料・オフライン・登録なし・日英対応。">
+<meta property="og:url" content="https://teen-info-room-web.vercel.app/">
+<meta property="og:image" content="https://teen-info-room-web.vercel.app/icons/fc-card-3x2.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://teen-info-room-web.vercel.app/icons/fc-card-3x2.png">
+<!-- Farcaster Mini App 埋め込み（タイムラインで画像＋ボタン→タップで起動） -->
+<meta name="fc:miniapp" content='{"version":"1","imageUrl":"https://teen-info-room-web.vercel.app/icons/fc-card-3x2.png","button":{"title":"🌙 ひらく / Open","action":{"type":"launch_miniapp","name":"Teen Info Room","url":"https://teen-info-room-web.vercel.app/","splashImageUrl":"https://teen-info-room-web.vercel.app/icons/icon-512.png","splashBackgroundColor":"#1e2230"}}}' />
+<!-- 旧クライアント/バリデータ互換の fc:frame 併記（中身同一） -->
+<meta name="fc:frame" content='{"version":"1","imageUrl":"https://teen-info-room-web.vercel.app/icons/fc-card-3x2.png","button":{"title":"🌙 ひらく / Open","action":{"type":"launch_frame","name":"Teen Info Room","url":"https://teen-info-room-web.vercel.app/","splashImageUrl":"https://teen-info-room-web.vercel.app/icons/icon-512.png","splashBackgroundColor":"#1e2230"}}}' />
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ヘッダー: アプリ名(=lang.jsのappName) + 右側に 🌐言語 と 常設「× とじる」 -->
+<header id="hd">
+  <!-- アプリ名(ロゴ)。ここを続けてN回タップすると メモの部屋が開く(痕跡は出さない)。🌐と×とじるは連打対象に含めない -->
+  <div id="hd-title" class="hd-title"></div>
+  <div class="hd-right">
+    <button id="btn-lang" class="btn-lang" aria-label="Language">🌐</button>
+    <button id="btn-exit" class="btn-exit" data-i18n="close">× とじる</button>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ① ひといき(初期表示) -->
+  <section id="scr-hitoiki" class="screen">
+    <div class="breath-wrap">
+      <div id="breath-circle" class="breath-circle">
+        <span id="breath-phase" class="breath-phase"></span>
+      </div>
+    </div>
+    <div id="oneline" class="oneline"></div>
+  </section>
+
+  <!-- ② データ(旧おなじひと。タブラベルのみ「データ」・内部id=onajiは不変) -->
+  <section id="scr-onaji" class="screen hidden">
+    <div id="onaji-list" class="cardlist"></div>
+  </section>
+
+  <!-- ③ しっておく -->
+  <section id="scr-shitte" class="screen hidden">
+    <div id="shitte-list" class="cardlist"></div>
+  </section>
+
+  <!-- ④ まどぐち -->
+  <section id="scr-madoguchi" class="screen hidden">
+    <p id="madoguchi-intro" class="intro"></p>
+    <div id="madoguchi-list" class="cardlist"></div>
+  </section>
+
+</main>
+
+<!-- 下タブ(4)。メモは下タブに置かない(v0.1裁定: 存在を隠す。開くのはアプリ名の連打だけ) -->
+<nav id="tabbar">
+  <button class="tab active" data-scr="hitoiki"><span class="tab-ico">🌙</span><span class="tab-lb" data-i18n="tab.hitoiki">ひといき</span></button>
+  <button class="tab" data-scr="onaji"><span class="tab-ico">👥</span><span class="tab-lb" data-i18n="tab.onaji">データ</span></button>
+  <button class="tab" data-scr="shitte"><span class="tab-ico">💡</span><span class="tab-lb" data-i18n="tab.shitte">しっておく</span></button>
+  <button class="tab" data-scr="madoguchi"><span class="tab-ico">✉️</span><span class="tab-lb" data-i18n="tab.madoguchi">まどぐち</span></button>
+</nav>
+
+<!-- メモの部屋(そよぎポケット方式: 書いたら見えない・アプリ名連打でだけ開く一体型)。
+     書く欄+そっとしまう+過去一覧+🗑2段階削除+とじる+せってい。閲覧状態は保存しない=リロード/再起動で必ず閉じる。
+     v0.3: せっていは可視UIから消し、この部屋の下部からのみ開ける -->
+<div id="memo-view" class="overlay hidden">
+  <div class="sheet-box">
+    <div class="sheet-title" data-i18n="memoRoomTitle">メモの部屋</div>
+    <textarea id="memo-input" class="memo-input" rows="4"></textarea>
+    <button id="memo-save" class="btn-primary" data-i18n="memoSave">そっと しまう</button>
+    <div id="memo-view-list" class="memo-view-list"></div>
+    <button id="memo-view-close" class="btn-line" data-i18n="close2">とじる</button>
+    <div class="memo-foot"><span id="open-settings" class="link-set" data-i18n="settings">せってい</span></div>
+  </div>
+</div>
+
+<!-- 言語シート(🌐から。選択が見える・選ぶと即切替+保存) -->
+<div id="lang-sheet" class="overlay hidden">
+  <div class="sheet-box">
+    <div class="sheet-title" data-i18n="langTitle">ことば / Language</div>
+    <div id="lang-choices" class="tap-choices"></div>
+    <button id="lang-close" class="btn-line" data-i18n="close2">とじる</button>
+  </div>
+</div>
+
+<!-- 初回起動の一度きり案内(発見手段の確保)。kyukei.prefs.introShown=true で以後は永遠に出さない -->
+<div id="intro" class="overlay hidden">
+  <div class="sheet-box">
+    <p id="intro-text" class="intro-text"></p>
+    <button id="intro-ok" class="btn-primary" data-i18n="introOk">わかった</button>
+  </div>
+</div>
+
+<!-- せってい オーバーレイ(タブにはしない) -->
+<div id="settings" class="overlay hidden">
+  <div class="sheet-box">
+    <div class="sheet-title" data-i18n="settings">せってい</div>
+
+    <div class="set-block">
+      <div class="set-label" data-i18n="setExitLabel">「× とじる」で ひらく ページ</div>
+      <input id="set-exit" class="text-in" type="url" inputmode="url" placeholder="https://www.google.com">
+      <div class="set-note" data-i18n="setExitNote">なにも 入れなければ Google が ひらきます</div>
+      <button id="set-exit-save" class="btn-line" data-i18n="save">ほぞん</button>
+    </div>
+
+    <div class="set-block">
+      <div class="set-label" data-i18n="setTapsLabel">メモを ひらく タップの 回数</div>
+      <div id="set-taps" class="tap-choices"></div>
+      <div class="set-note" data-i18n="setTapsNote">画面の いちばん上の なまえを、この 回数 だけ つづけて タップすると、メモの部屋が ひらきます</div>
+    </div>
+
+    <div class="set-block">
+      <div class="set-label" data-i18n="music">おんがく</div>
+      <div id="set-bgm" class="tap-choices"></div>
+    </div>
+
+    <div class="set-block">
+      <p class="set-note" data-i18n="privacyNote">記録はこの端末の中だけ。どこにも送信されません</p>
+      <p class="credit"><a id="credit-link" class="credit-link" href="https://soyogi.hp.peraichi.com/top" target="_blank" rel="noopener" data-i18n="credit">アプリ開発：介護と支援の相談どころ　そよぎ</a></p>
+      <p class="credit-ver" data-i18n="version">バージョン 1.0</p>
+    </div>
+
+    <button id="settings-close" class="btn-line" data-i18n="close2">とじる</button>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="lang.js"></script>
+<script src="audio.js"></script>
+<script src="tap.js"></script>
+<script src="app.js"></script>
+<!-- Farcaster Mini App SDK: ホスト内なら起動準備完了を通知。通常のWeb/PWA・オフラインでは無害（失敗は握りつぶす） -->
+<script type="module">
+  try {
+    const { sdk } = await import("https://esm.sh/@farcaster/miniapp-sdk");
+    await sdk.actions.ready();
+  } catch (e) { /* Farcaster外／オフラインでは何もしない */ }
+</script>
+</body>
+</html>

@@ -1,0 +1,470 @@
+'use strict';
+/* 10代の情報室 起動スモークテスト(疑似DOM・v1.0)
+   実在idだけ返す疑似DOMで lang.js + audio.js + tap.js + app.js を起動し、SPEC_YC_V0.md §7 + V0_1〜V0_6 + V1(世界版) の受け入れ条件を検証する。
+   ・v0.4: 可視領域(4タブ)は情報提供の形(三人称・記事調)。窓口名を除き「あなた」への語りかけが無い(ja)。タブ「おなじひと」→「データ」
+   ・v0.5: メモの部屋の書きかけを kyukei.draft に保持(再起動で復元・しまうと消える・可視領域に出ない)
+   ・v0.6: データタブを4カードに再編(学年別=約15/約17/約24人に1人・毎日数時間・だれにも話していない・ひとりの時間)
+   ・v1.0: 日英2言語(lang.js)。既定=navigator判定/setLangで全画面切替/ja文言ゴールデン一致/en=5データ(Around the world)+7窓口/🌐は連打対象外
+   ・起動時に例外なし / 4画面(ひといき/おなじひと/しっておく/まどぐち)の切替 / 各カード表示
+   ・可視UIに メモ・せってい・そよぎ の入口/痕跡が無い(v0.3)
+   ・初回だけ一度きり案内が出て「わかった」でintroShown=true・以後(リロード)は出ない(v0.3)
+   ・アプリ名N連打→「メモの部屋」が開く(書く+一覧が一体)→ しまう→欄が空+一覧に即反映(ヒントトーストは出さない)→ 個別削除 →とじる
+   ・せっていは メモの部屋の下部ボタンからのみ開く(v0.3)。クレジット/退出先URL/連打回数/おんがく が中にある
+   ・メモの部屋・せっていは保存しない(初期状態は閉じている=リロードで閉じる)
+   ・クイック退出が location.replace(戻れない)
+   ・BGM(v0.2): audio.jsのSound API・せっていの「おんがく」トグルでprefs.bgm切替+保存・無音ダミーSound廃止
+   ・textContentのみ(innerHTML禁止)・clickを使わない(全ボタンTap)
+   使い方: node _smoke.js  */
+const fs = require('fs');
+const vm = require('vm');
+
+const html = fs.readFileSync('./index.html', 'utf8');
+const appSrc = fs.readFileSync('./app.js', 'utf8');
+const ids = new Set([...html.matchAll(/id="([^"]+)"/g)].map(m => m[1]));
+
+/* ---- 疑似DOM要素(textContent設定で子をクリア/イベントは_evに保持) ---- */
+function makeEl(tag){
+  const node = {
+    tagName:(tag || 'div').toUpperCase(),
+    children:[], style:{}, dataset:{}, _ev:{}, _attr:{},
+    className:'', value:'', placeholder:'', src:'', href:'', target:'', rel:'', rows:0,
+    type:'', inputMode:'', hidden:false, disabled:false, lang:'', dir:'',
+    appendChild(c){ this.children.push(c); return c; },
+    get childNodes(){ return this.children; },
+    setAttribute(k, v){ this._attr[k] = v; }, getAttribute(k){ return (k in this._attr) ? this._attr[k] : null; },
+    addEventListener(t, h){ (this._ev[t] = this._ev[t] || []).push(h); },
+    removeEventListener(){},
+    focus(){}, click(){}, scrollIntoView(){}, scrollTo(){}, remove(){},
+    getBoundingClientRect(){ return { top:0, left:0, width:100, height:50, bottom:50, right:100 }; },
+    classList:{
+      _s:new Set(),
+      add(...c){ c.forEach(x => this._s.add(x)); },
+      remove(...c){ c.forEach(x => this._s.delete(x)); },
+      toggle(c, f){ if(f === undefined) f = !this._s.has(c); if(f) this._s.add(c); else this._s.delete(c); return f; },
+      contains(c){ return this._s.has(c); }
+    },
+    querySelector(){ return makeEl(); },
+    querySelectorAll(){ return []; }
+  };
+  let _text = '';
+  Object.defineProperty(node, 'textContent', {
+    get(){ return _text; },
+    set(v){ _text = (v == null ? '' : String(v)); node.children.length = 0; }
+  });
+  return node;
+}
+
+const created = {};
+function byId(id){
+  if(!ids.has(id)) return null;
+  if(!created[id]) created[id] = makeEl();
+  return created[id];
+}
+function tap(elm){   // pointerdown → pointerup(同一pointerId・移動なし)
+  const d = { pointerId:1, isPrimary:true, clientX:0, clientY:0, preventDefault(){} };
+  (elm._ev.pointerdown || []).forEach(h => h(d));
+  (elm._ev.pointerup   || []).forEach(h => h({ pointerId:1, clientX:0, clientY:0 }));
+}
+function allText(node){
+  let s = (node && node.textContent) || '';
+  (node && node.children || []).forEach(c => { s += ' ' + allText(c); });
+  return s;
+}
+function collectTag(node, tagName, out){
+  out = out || [];
+  (node.children || []).forEach(c => {
+    if(c.tagName === tagName) out.push(c);
+    collectTag(c, tagName, out);
+  });
+  return out;
+}
+
+/* ---- localStorage / location ---- */
+const store = {};
+const localStorageStub = {
+  getItem:k => (k in store ? store[k] : null),
+  setItem:(k, v) => { store[k] = String(v); },
+  removeItem:k => { delete store[k]; }
+};
+const loc = { _replace:[], _assign:[], _href:'', hostname:'smoke.test', protocol:'https:' };
+const locationStub = {
+  replace:u => loc._replace.push(u),
+  assign:u => loc._assign.push(u),
+  get href(){ return loc._href; }, set href(v){ loc._href = v; },
+  hostname:'smoke.test', protocol:'https:'
+};
+
+/* ---- Web Audio スタブ(audio.jsのBGM生成が例外なく走るだけの最小実装) ---- */
+function fakeParam(){ return { value:0, setValueAtTime(){}, linearRampToValueAtTime(){}, exponentialRampToValueAtTime(){}, setTargetAtTime(){} }; }
+function fakeNode(){ return { type:'', frequency:fakeParam(), gain:fakeParam(), connect(){}, disconnect(){}, start(){}, stop(){} }; }
+function FakeAudioContext(){
+  this.state = 'running';   // 起動直後にrunning(=タップでBGMを開始できる)
+  this.currentTime = 0;
+  this.destination = {};
+  this.resume = function(){ this.state = 'running'; };
+  this.createOscillator = fakeNode;
+  this.createGain = fakeNode;
+  this.createBiquadFilter = function(){ return { type:'', frequency:fakeParam(), connect(){}, disconnect(){} }; };
+}
+
+/* ---- sandbox ---- */
+const documentStub = {
+  documentElement:makeEl('html'), head:makeEl('head'), body:makeEl('body'), title:'',
+  createElement:t => makeEl(t),
+  getElementById:id => byId(id),
+  addEventListener(){},
+  querySelector(sel){ const m = /^#([A-Za-z0-9_-]+)$/.exec(String(sel).trim()); return m ? byId(m[1]) : makeEl(); },
+  querySelectorAll(){ return []; }   // '#tabbar .tab' 等は空(showScreenは例外なく素通り)
+};
+const sandbox = {
+  console, document:documentStub,
+  navigator:{ language:'ja-JP' },
+  localStorage:localStorageStub,
+  location:locationStub,
+  scrollTo(){},
+  addEventListener(){},
+  setTimeout:() => 0, setInterval:() => 0, clearInterval(){}, clearTimeout(){},
+  AudioContext:FakeAudioContext,
+  Date
+};
+sandbox.window = sandbox;
+sandbox.globalThis = sandbox;
+
+const fails = [];
+function check(name, cond){ if(cond) console.log('  OK  ' + name); else { console.log('  NG  ' + name); fails.push(name); } }
+
+/* ---- [条件1] 起動(script順=lang.js→audio.js→tap.js→app.js) ---- */
+/* Sound は audio.js の const(sandbox直下には現れない)。同じスクリプト内で window に退避して検査可能にする */
+const src = ['./lang.js', './audio.js', './tap.js', './app.js'].map(f => fs.readFileSync(f, 'utf8')).join('\n')
+  + '\n;try{ window.__Sound = Sound; }catch(e){}';
+vm.createContext(sandbox);
+try{
+  vm.runInContext(src, sandbox, { filename:'app-bundle.js' });
+}catch(e){
+  console.log('SMOKE NG: 起動時に例外');
+  console.log(e.stack.split('\n').slice(0, 8).join('\n'));
+  process.exit(1);
+}
+console.log('[条件1] 起動時に例外なし');
+check('起動完了(init実行)', true);
+check('ヘッダーにアプリ名が入る', byId('hd-title').textContent.length > 0);
+check('初期表示は ひといき(他はhidden)',
+  !byId('scr-hitoiki').classList.contains('hidden') &&
+  byId('scr-onaji').classList.contains('hidden') &&
+  byId('scr-madoguchi').classList.contains('hidden'));
+
+/* ---- [v0.3 初回案内] introShown未設定=初回は案内が一度だけ出る ---- */
+console.log('[v0.3 初回案内] 初回だけ一度きり案内・「わかった」でintroShown=true');
+check('初回(introShown未設定)は案内オーバーレイが出る', !byId('intro').classList.contains('hidden'));
+const introTxt = byId('intro-text').textContent;
+check('案内文が原案どおり(かくれた機能/名前を3回/メモとせっていの部屋/もう二度と表示されません)',
+  introTxt.includes('この部屋には、かくれた機能があります') &&
+  introTxt.includes('「10代の情報室」の名前を 3回 つづけてタップ') &&
+  introTxt.includes('メモと せっていの部屋が ひらきます') &&
+  introTxt.includes('この案内は、もう二度と表示されません'));
+tap(byId('intro-ok'));
+check('「わかった」1タップで閉じ、introShown=true を保存', byId('intro').classList.contains('hidden') && JSON.parse(store['kyukei.prefs']).introShown === true);
+
+/* ---- [v0.3 可視UI] メモ・せってい・そよぎ の入口が見えない ---- */
+console.log('[v0.3 可視UI] メモ・せってい・そよぎ の痕跡が可視UIに無い');
+const visEnd = html.indexOf('<!-- メモの部屋');
+const visibleRaw = html.slice(html.indexOf('<body'), visEnd);   // ヘッダー+4タブ画面+タブバー(オーバーレイより前)
+const visible = visibleRaw.replace(/<!--[\s\S]*?-->/g, '');       // コメントは可視UIではないので除外
+check('可視UI(ヘッダー+4タブ+タブバー)に せってい/メモ/そよぎ の文字が無い',
+  !visible.includes('せってい') && !visible.includes('メモ') && !visible.includes('そよぎ'));
+check('せってい入口(#open-settings)は可視UIに無く、メモの部屋の中にある',
+  visible.indexOf('open-settings') < 0 && html.indexOf('id="open-settings"') > visEnd);
+check('クレジット(そよぎ/HPリンク)はせってい内=隠し領域にある', html.indexOf('soyogi.hp.peraichi.com') > visEnd);
+
+/* ---- [v0.1] メモの入口が どこにも見えない(4タブ・scr-memoは廃止) ---- */
+console.log('[v0.1] メモの入口が画面に無い(4タブ)');
+check('下タブは4つ(data-scrがhitoiki/onaji/shitte/madoguchiのみ)', (html.match(/data-scr="/g) || []).length === 4);
+check('下タブに data-scr="memo" が無い', !/data-scr="memo"/.test(html));
+check('メモ用セクション(scr-memo)が廃止されている', !/id="scr-memo"/.test(html) && byId('scr-memo') === null);
+check('せっていの説明だけが存在に触れる(「メモの部屋が ひらきます」)', html.includes('メモの部屋が ひらきます'));
+
+/* ---- [条件2] 4画面の切替 ---- */
+console.log('[条件2] 4タブの切替・カード表示・呼吸アニメ・クイック退出');
+let ok4 = true;
+['onaji','shitte','madoguchi','hitoiki'].forEach(s => {
+  try{ sandbox.showScreen(s); }catch(e){ ok4 = false; console.log('    ' + e.message); }
+});
+check('4画面を例外なく切替できる', ok4);
+check('呼吸フェーズに「すって…」が入る', byId('breath-phase').textContent === 'すって…');
+
+/* カード表示(v0.6 データ4カード・記事調が出ているか) */
+const onajiTxt = allText(byId('onaji-list'));
+check('データ: 4カード(学年別/毎日数時間/だれにも話していない/ひとりの時間)', byId('onaji-list').children.filter(c => c.className === 'card').length === 4);
+check('データ: 学年別の3つの「約N人に1人」(小6約15/中2約17/高2約24)が出る',
+  onajiTxt.includes('小学6年生で 約15人に1人（6.5%）') &&
+  onajiTxt.includes('中学2年生で 約17人に1人（5.7%）') &&
+  onajiTxt.includes('全日制高校2年生で 約24人に1人（4.1%）'));
+check('データ: 「毎日、数時間」カード(ほぼ毎日・平均1日3〜4時間)が出る',
+  onajiTxt.includes('「ほぼ毎日」がいちばん多く、およそ半数') && onajiTxt.includes('平均で1日3〜4時間と報告されています'));
+check('データ: 「半分以上が、だれにも話していない」が出る', onajiTxt.includes('「言ってもわかってもらえない気がする」という理由が多くあげられています'));
+check('データ: 末尾の出典注記が令和2〜3年度に差し替わっている',
+  onajiTxt.includes('国の全国調査（令和2〜3年度・厚生労働省/文部科学省など）にもとづいています'));
+const shitteTxt = allText(byId('shitte-list'));
+check('しっておく: 6カードが新文言で揃う(言葉/評価/原因/相談ルール/両立/頼ること)',
+  shitteTxt.includes('子ども・若者を「ヤングケアラー」と呼びます') &&
+  shitteTxt.includes('支援の現場では「すごいことをしている」と評価されています') &&
+  shitteTxt.includes('「だれかのせい」と言えるものではない、というのが支援の現場の考え方です') &&
+  shitteTxt.includes('名前を言わなくていいところがあります') &&
+  shitteTxt.includes('この2つは両立できる') &&
+  shitteTxt.includes('本人と家族の両方を守る方法のひとつとされています'));
+const madoTxt = allText(byId('madoguchi-list'));
+check('まどぐち冒頭が新文言(相談するかどうかは、本人が決めてよいこと)',
+  byId('madoguchi-intro').textContent.includes('相談するかどうかは、本人が決めてよいこと、とされています') &&
+  byId('madoguchi-intro').textContent.includes('10代が使える主な窓口を紹介します'));
+check('まどぐち: あなたのいばしょ/チャイルドライン/SOS/189 が揃う(窓口は変更なし)',
+  madoTxt.includes('あなたのいばしょ') && madoTxt.includes('チャイルドライン') && madoTxt.includes('24時間子供SOSダイヤル') && madoTxt.includes('189'));
+
+/* ---- [v0.4 二人称排除] 可視領域の文言に「あなた」への語りかけが無い ----
+   隠し領域(メモの部屋/せってい/初回案内)は対象外。窓口名「あなたのいばしょ」は固有名詞ゆえ除外(§6で不変)。 */
+console.log('[v0.4 二人称排除] 可視領域に「あなた」への語りかけが無い');
+check('タブラベルが おなじひと→データ に変わっている(内部id=onajiは不変・i18n化)',
+  html.includes('data-i18n="tab.onaji">データ</span>') && !html.includes('>おなじひと<') && html.includes('data-scr="onaji"'));
+/* ひといきの一言(順送り)を8回ぶん巡回して集める=4本を確実に網羅 */
+let allOnelines = '';
+for(let i = 0; i < 8; i++){ allOnelines += ' ' + byId('oneline').textContent; sandbox.nextOneline(); }
+/* 可視4画面の描画テキスト + タブラベル。固有名詞「あなたのいばしょ」だけ取り除く */
+const visibleText = [allOnelines, onajiTxt, shitteTxt, byId('madoguchi-intro').textContent, madoTxt, 'ひといき データ しっておく まどぐち']
+  .join(' ').split('あなたのいばしょ').join('');
+check('可視領域(一言4本+データ+しっておく+まどぐち+タブ)に、窓口名以外の「あなた」が無い', !visibleText.includes('あなた'));
+check('しっておく本文に「あなた」が無い(記事調)', !shitteTxt.includes('あなた'));
+check('ひといきの一言4本すべてに「あなた」が無い', !allOnelines.includes('あなた'));
+
+/* まどぐちリンク: 外部は target=_blank rel=noopener / 電話は tel: */
+const anchors = collectTag(byId('madoguchi-list'), 'A');
+const webA = anchors.filter(a => /^https:/.test(a.href));
+const telA = anchors.filter(a => /^tel:/.test(a.href));
+check('まどぐち: 外部リンクは target=_blank rel=noopener', webA.length >= 1 && webA.every(a => a.target === '_blank' && a.rel === 'noopener'));
+check('まどぐち: 電話は tel: リンク(talkme.jp/childlineはhttps)', telA.length >= 1 && webA.some(a => a.href.indexOf('talkme.jp') >= 0));
+
+/* クイック退出は location.replace(戻れない)・href/assignは使わない */
+sandbox.quickExit();
+check('クイック退出が location.replace を呼ぶ(既定Google)', loc._replace.length === 1 && loc._replace[0] === 'https://www.google.com');
+check('location.href / location.assign は使わない(戻るで戻れない)', loc._assign.length === 0 && loc._href === '');
+
+/* ---- [条件3] メモの部屋(一体型) ---- */
+console.log('[条件3] メモの部屋: 連打で開く→書く→しまう→一覧に即反映→個別削除→とじる');
+check('起動直後、メモの部屋は閉じている', byId('memo-view').classList.contains('hidden'));
+check('メモの部屋の開閉状態はlocalStorageに保存されない', Object.keys(store).every(k => !/view/i.test(k)));
+
+/* 連打(既定3回)で開く。回数を忘れて多めに連打しても通過した瞬間に開く */
+check('連打回数の既定は3', sandbox.memoTapGoal() === 3);
+const hd = byId('hd-title');
+tap(hd); tap(hd);
+check('2連打では まだ開かない', byId('memo-view').classList.contains('hidden'));
+tap(hd);   // 3回目で開く
+check('3連打で メモの部屋が開く', !byId('memo-view').classList.contains('hidden'));
+check('開いた部屋に 書く欄と「そっと しまう」がある(一体型)',
+  byId('memo-input') !== null && byId('memo-save') !== null);
+check('メモ0件のとき 一覧は空表示', allText(byId('memo-view-list')).includes('まだ なにも ありません'));
+
+/* 書く→しまう(memo-saveボタンをタップ)→ 欄が空 + 一覧に即反映 + ヒントは出さない */
+byId('memo-input').value = 'きょうは しんどかった';
+tap(byId('memo-save'));
+check('しまう→ 欄が空になる', byId('memo-input').value === '');
+check('しまう→ 端末に1件保存される', JSON.parse(store['kyukei.memos']).length === 1);
+check('しまう→ 開いている一覧に即反映(新しいメモが出る)', allText(byId('memo-view-list')).includes('きょうは しんどかった'));
+const toastTxt = allText(byId('toast'));
+check('トーストは「しまいました」のみ(初回ヒントは廃止=案内文を出さない)',
+  !byId('toast').classList.contains('hidden') && toastTxt.includes('しまいました') && !toastTxt.includes('つづけてタップ'));
+
+/* 2件目 */
+byId('memo-input').value = 'ねむれない';
+tap(byId('memo-save'));
+check('2件目も保存され、一覧に新しい順で並ぶ(日時付き)',
+  JSON.parse(store['kyukei.memos']).length === 2 &&
+  /ねむれない[\s\S]*きょうは しんどかった/.test(allText(byId('memo-view-list'))) &&
+  /\d+月\d+日/.test(allText(byId('memo-view-list'))));
+
+/* 個別削除(2段階: 🗑 → けす?) */
+const delBtn = collectTag(byId('memo-view-list'), 'BUTTON')[0];
+tap(delBtn);
+check('削除1回目は「けす?」に変わるだけ(まだ消えない)', delBtn.textContent === 'けす?' && JSON.parse(store['kyukei.memos']).length === 2);
+tap(delBtn);
+check('削除2回目で1件消える', JSON.parse(store['kyukei.memos']).length === 1);
+
+/* 1タップで閉じる */
+tap(byId('memo-view-close'));
+check('「とじる」1タップで閉じる', byId('memo-view').classList.contains('hidden'));
+
+/* ---- [v0.3 動線] メモの部屋 → せってい ---- */
+console.log('[v0.3 動線] メモの部屋の下部「せってい」ボタンからのみ開く');
+tap(byId('hd-title')); tap(byId('hd-title')); tap(byId('hd-title'));   // メモの部屋を開く(goal3)
+check('連打で メモの部屋が(再び)開く', !byId('memo-view').classList.contains('hidden'));
+tap(byId('open-settings'));   // メモの部屋の中の「せってい」ボタン
+check('メモの部屋の「せってい」でせっていが開く', !byId('settings').classList.contains('hidden'));
+
+/* ---- [せってい] 連打回数の変更 + 退出先URL ---- */
+console.log('[せってい] 連打回数の変更・退出先URL');
+const tapOpts = collectTag(byId('set-taps'), 'BUTTON');   // [1,3,5,10]
+check('連打回数の選択肢が4つ(1/3/5/10)', tapOpts.length === 4);
+tap(tapOpts[3]);   // 10回を選ぶ
+check('連打回数を10に変更→ prefsに保存', JSON.parse(store['kyukei.prefs']).memoTaps === 10 && sandbox.memoTapGoal() === 10);
+byId('set-exit').value = 'https://example.com/';
+sandbox.saveExitUrl();
+check('退出先URLを変更→ prefsに保存', JSON.parse(store['kyukei.prefs']).exitUrl === 'https://example.com/');
+sandbox.quickExit();
+check('変更後の退出先で location.replace が呼ばれる', loc._replace[loc._replace.length - 1] === 'https://example.com/');
+
+/* ---- [v0.2 BGM] audio.js + おんがくトグル ---- */
+console.log('[v0.2 BGM] audio.js / せってい「おんがく」トグル');
+const S = sandbox.__Sound;
+check('audio.js の Sound が読み込まれている', S && typeof S.tap === 'function');
+check('Sound.setBgmEnabled / bgmEnabled / bgmPlaying が存在', typeof S.setBgmEnabled === 'function' && typeof S.bgmEnabled === 'boolean' && typeof S.bgmPlaying === 'boolean');
+check('app.js に無音ダミー const Sound が残っていない(audio.jsが正)', !/const\s+Sound\s*=/.test(appSrc));
+check('初期 prefs.bgm は true・Sound に同期', JSON.parse(store['kyukei.prefs']).bgm === true && S.bgmEnabled === true);
+/* せっていの「おんがく」トグル([ながす]/[ながさない]) */
+const bgmOpts = collectTag(byId('set-bgm'), 'BUTTON');
+check('おんがくトグルは2択([ながす]/[ながさない])', bgmOpts.length === 2 && bgmOpts[0].textContent === 'ながす' && bgmOpts[1].textContent === 'ながさない');
+tap(bgmOpts[1]);   // ながさない
+check('OFF→ prefs.bgm=false 保存 + Sound停止(bgmEnabled=false・playing=false)',
+  JSON.parse(store['kyukei.prefs']).bgm === false && S.bgmEnabled === false && S.bgmPlaying === false);
+tap(bgmOpts[0]);   // ながす
+check('ON→ prefs.bgm=true 保存 + Sound再開(bgmEnabled=true)',
+  JSON.parse(store['kyukei.prefs']).bgm === true && S.bgmEnabled === true);
+/* タップでBGMが始まる(スタブは起動直後running=最初のタップで開始) */
+check('タップ経由でBGMが再生状態になる(bgmPlaying)', S.bgmPlaying === true);
+
+/* ---- [条件4] textContentのみ・clickを使わない・v0.1掃除 ---- */
+console.log('[条件4] innerHTML禁止・clickを使わない・v0.1の掃除');
+check('app.js に innerHTML / insertAdjacentHTML を使っていない', !/\.innerHTML/.test(appSrc) && !/insertAdjacentHTML/.test(appSrc));
+check('app.js に onclick を使っていない', !/onclick/.test(appSrc));
+check("app.js に addEventListener('click') を使っていない", !/addEventListener\(\s*['"]click['"]/.test(appSrc));
+check('index.html に inline onclick を使っていない', !/onclick=/.test(html));
+check('クイック退出は location.replace(href/assignを使わない)', /location\.replace/.test(appSrc) && !/location\.href\s*=/.test(appSrc) && !/location\.assign/.test(appSrc));
+check('初回ヒントのフラグ hintShown は残っていない(v0.1で削除)', !/hintShown/.test(appSrc));
+
+/* ---- [v1.0 世界版] 日英2言語・切替・ja文言ゴールデン・🌐は連打対象外 ---- */
+console.log('[v1.0 世界版] 日英2言語切替・ja文言ゴールデン一致・🌐は連打対象外');
+/* 既定はja(navigator=ja-JP) */
+check('既定lang=ja(navigator ja-JP)', documentStub.documentElement.lang === 'ja' && byId('hd-title').textContent === '10代の情報室');
+/* ja文言ゴールデン(現行と一字一致=lang.jsへlossless移設) */
+check('ja ゴールデン: 一言[0]', sandbox.T('onelines')[0] === 'ゆっくりした呼吸には、心拍を落ちつかせる はたらきがあります。');
+check('ja ゴールデン: しっておく[0].body', sandbox.T('shitte')[0].body === '家族の世話や家事を日常的に担う子ども・若者を「ヤングケアラー」と呼びます。例えば、世話や家事で宿題や部活の時間がとれない。友だちの誘いを断ることが多い。夜中に家族の対応で起きる。こうした毎日がつづく状態を指します。');
+check('ja ゴールデン: onajiNote', sandbox.T('onajiNote') === '数字は 国の全国調査（令和2〜3年度・厚生労働省/文部科学省など）にもとづいています');
+check('ja ゴールデン: madoIntro', sandbox.T('madoIntro') === '相談するかどうかは、本人が決めてよいこと、とされています。ここでは、10代が使える主な窓口を紹介します。');
+check('ja ゴールデン: memoSaved / settings / close', sandbox.T('memoSaved') === 'しまいました' && sandbox.T('settings') === 'せってい' && sandbox.T('close') === '× とじる');
+
+/* 英語へ切替 */
+sandbox.setLang('en');
+check('en: html lang属性=en・appName=Teen Info Room', documentStub.documentElement.lang === 'en' && byId('hd-title').textContent === 'Teen Info Room');
+check('en: タブ名 Breathe/Data/Basics/Helplines', sandbox.T('tab.hitoiki') === 'Breathe' && sandbox.T('tab.onaji') === 'Data' && sandbox.T('tab.shitte') === 'Basics' && sandbox.T('tab.madoguchi') === 'Helplines');
+check('en: 一言[0]', byId('oneline').textContent === 'Slow breathing is known to calm the heart rate.');
+check('en: 呼吸フェーズ = Breathe in…', byId('breath-phase').textContent === 'Breathe in…');
+const enOnaji = allText(byId('onaji-list'));
+check('en データ: 5カード(Around the worldを含む)', byId('onaji-list').children.filter(c => c.className === 'card').length === 5 && enOnaji.includes('Around the world') && enOnaji.includes('Young carers exist in every country'));
+check('en データ: 学年別(1 in 15/17/24)+国際数値', enOnaji.includes('about 1 in 15 sixth graders (6.5%)') && enOnaji.includes('about 1 in 17') && enOnaji.includes('about 1 in 24') && enOnaji.includes('about 120,000 young carers'));
+check('en データ: 出典注記(Japan\'s national surveys)', enOnaji.includes('Figures are based on Japan'));
+const enShitte = allText(byId('shitte-list'));
+check('en しっておく: 6カード', byId('shitte-list').children.filter(c => c.className === 'card').length === 6 && enShitte.includes('are called "young carers."') && enShitte.includes('one way to protect both the young person and the family'));
+check('en まどぐち冒頭', byId('madoguchi-intro').textContent === 'Whether to talk to someone is up to each person. This page simply lists places that exist.');
+const enCards = byId('madoguchi-list').children.filter(c => c.className === 'card');
+check('en まどぐち: 窓口7件', enCards.length === 7);
+check('en まどぐち: 7件がこの順(グローバル2→英語圏4→英国YC専門1)',
+  allText(enCards[0]).includes('Child Helpline International') &&
+  allText(enCards[1]).includes('Find a Helpline') &&
+  allText(enCards[2]).includes('Childline (UK)') &&
+  allText(enCards[3]).includes('Kids Helpline (Australia)') &&
+  allText(enCards[4]).includes('Kids Help Phone (Canada)') &&
+  allText(enCards[5]).includes('Boys Town National Hotline (USA)') &&
+  allText(enCards[6]).includes('Carers Trust (UK)'));
+check('en まどぐち: 電話は tel: / Web は https(_blank)', collectTag(byId('madoguchi-list'), 'A').some(a => /^tel:/.test(a.href)) && collectTag(byId('madoguchi-list'), 'A').some(a => /^https:/.test(a.href) && a.target === '_blank' && a.rel === 'noopener'));
+
+/* 日本語へ戻す(以降のブロックはfresh instanceだが、mainはjaに戻しておく) */
+sandbox.setLang('ja');
+check('ja復帰: appName/データ4カード/まどぐち4件', byId('hd-title').textContent === '10代の情報室' && byId('onaji-list').children.filter(c => c.className === 'card').length === 4 && byId('madoguchi-list').children.filter(c => c.className === 'card').length === 4);
+
+/* 🌐は連打判定に含めない(fresh instance・既定goal3) */
+const langInst = makeInstance({});
+for(let i = 0; i < 6; i++) tap(langInst.byId('btn-lang'));   // 🌐を連打
+check('🌐 を何回タップしてもメモの部屋は開かない(連打対象外)', langInst.byId('memo-view').classList.contains('hidden'));
+check('🌐 タップで言語シートが開く', !langInst.byId('lang-sheet').classList.contains('hidden'));
+tap(langInst.byId('hd-title')); tap(langInst.byId('hd-title')); tap(langInst.byId('hd-title'));
+check('アプリ名を3連打するとメモの部屋が開く(連打カウントは🌐の影響を受けない)', !langInst.byId('memo-view').classList.contains('hidden'));
+
+/* ---- [v0.3 リロード] 同じ端末(store)で再起動: 案内は出ない・両オーバーレイは閉 ---- */
+console.log('[v0.3 リロード] introShown保持で案内が出ない・メモの部屋/せってい は閉');
+(function reload(){
+  const created2 = {};
+  const byId2 = id => { if(!ids.has(id)) return null; if(!created2[id]) created2[id] = makeEl(); return created2[id]; };
+  const doc2 = {
+    documentElement:makeEl('html'), head:makeEl('head'), body:makeEl('body'), title:'',
+    createElement:t => makeEl(t), getElementById:id => byId2(id), addEventListener(){},
+    querySelector(sel){ const m = /^#([A-Za-z0-9_-]+)$/.exec(String(sel).trim()); return m ? byId2(m[1]) : makeEl(); },
+    querySelectorAll(){ return []; }
+  };
+  const sb2 = {
+    console, document:doc2, navigator:{ language:'ja-JP' },
+    localStorage:localStorageStub, location:locationStub, scrollTo(){}, addEventListener(){},
+    setTimeout:() => 0, setInterval:() => 0, clearInterval(){}, clearTimeout(){},
+    AudioContext:FakeAudioContext, Date
+  };
+  sb2.window = sb2; sb2.globalThis = sb2;
+  vm.createContext(sb2);
+  try{ vm.runInContext(src, sb2, { filename:'reload.js' }); }
+  catch(e){ check('リロード起動が例外なし', false); console.log('    ' + e.message); return; }
+  check('リロード起動が例外なし', true);
+  check('introShown=true なので 案内は出ない', byId2('intro').classList.contains('hidden'));
+  check('リロード後 メモの部屋は閉じている', byId2('memo-view').classList.contains('hidden'));
+  check('リロード後 せっていは閉じている', byId2('settings').classList.contains('hidden'));
+  check('設定は保持(introShown/bgm/memoTaps/exitUrl)',
+    JSON.parse(store['kyukei.prefs']).introShown === true);
+})();
+
+/* ---- [v0.5 書きかけ保持] 独立した端末(store)で、入力→再起動→復元→しまうと消える を検証 ---- */
+console.log('[v0.5 書きかけ保持] 入力→再起動で復元・しまうと消える・可視領域に出ない');
+/* 指定の store(localStorage) を共有する新しいアプリ実体を起動して返す(=リロード相当) */
+function makeInstance(instStore){
+  const c = {};
+  const byIdI = id => { if(!ids.has(id)) return null; if(!c[id]) c[id] = makeEl(); return c[id]; };
+  const ls = { getItem:k => (k in instStore ? instStore[k] : null), setItem:(k, v) => { instStore[k] = String(v); }, removeItem:k => { delete instStore[k]; } };
+  const doc = {
+    documentElement:makeEl('html'), head:makeEl('head'), body:makeEl('body'), title:'',
+    createElement:t => makeEl(t), getElementById:id => byIdI(id), addEventListener(){},
+    querySelector(sel){ const m = /^#([A-Za-z0-9_-]+)$/.exec(String(sel).trim()); return m ? byIdI(m[1]) : makeEl(); },
+    querySelectorAll(){ return []; }
+  };
+  const sb = {
+    console, document:doc, navigator:{ language:'ja-JP' }, localStorage:ls, location:locationStub,
+    scrollTo(){}, addEventListener(){}, setTimeout:() => 0, setInterval:() => 0, clearInterval(){}, clearTimeout(){},
+    AudioContext:FakeAudioContext, Date
+  };
+  sb.window = sb; sb.globalThis = sb;
+  vm.createContext(sb);
+  vm.runInContext(src, sb, { filename:'instance.js' });
+  return { byId:byIdI, sandbox:sb };
+}
+function fireInput(elm){ (elm._ev.input || []).forEach(h => h({ target:elm })); }
+const draftStore = {};   // このテスト専用の端末
+/* 起動1: 部屋を開いて 書きかけを入力(inputで即保存) */
+const A = makeInstance(draftStore);
+A.sandbox.openMemoView();
+A.byId('memo-input').value = 'かきかけ です';
+fireInput(A.byId('memo-input'));
+check('入力すると kyukei.draft に即保存される', draftStore['kyukei.draft'] === 'かきかけ です');
+/* 閉じる: 欄はクリア・draftは残る(=部屋の外に書きかけを残さない/でも保持) */
+A.sandbox.closeMemoView();
+check('閉じても kyukei.draft は保持される', draftStore['kyukei.draft'] === 'かきかけ です');
+check('閉じると textarea(DOM)は空になる', A.byId('memo-input').value === '');
+/* ③ 書きかけの内容が可視領域(4タブ)に現れない */
+['hitoiki','onaji','shitte','madoguchi'].forEach(s => A.sandbox.showScreen(s));
+const visA = ['scr-hitoiki','scr-onaji','scr-shitte','scr-madoguchi'].map(id => allText(A.byId(id))).join(' ');
+check('書きかけの内容が可視領域(4タブ)に現れない', !visA.includes('かきかけ です'));
+/* ① 再起動(リロード相当・同じ端末draftStore)→ 部屋を開くと復元 */
+const B = makeInstance(draftStore);
+check('リロード直後、部屋を開く前は textarea が空(秘匿=開くまで復元しない)', B.byId('memo-input').value === '');
+B.sandbox.openMemoView();
+check('リロード後、部屋を開くと書きかけが復元される(続きから書ける)', B.byId('memo-input').value === 'かきかけ です');
+/* ② 「そっと しまう」で保存→ draftが消える・本体へ移る */
+B.sandbox.saveMemo();
+check('「そっと しまう」で kyukei.draft が消える', !('kyukei.draft' in draftStore));
+check('しまった内容は kyukei.memos に移る', JSON.parse(draftStore['kyukei.memos']).some(e => e.m === 'かきかけ です'));
+check('しまった後、textarea は空になる', B.byId('memo-input').value === '');
+
+console.log('');
+if(fails.length){ console.log('SMOKE NG: ' + fails.length + '件失敗'); process.exit(1); }
+console.log('SMOKE OK: 全チェック通過');

@@ -1,0 +1,218 @@
+/* 10代の情報室 試作v0
+   夜の自室のような、静かで暗めの中立デザイン(裁定⑦: 一見して支援アプリに見えない)。
+   そよぎ緑は使わない。アクセントは あたたかい灯り色(#e8b04a)。 */
+
+:root{
+  --bg:#1e2230;        /* 背景(濃紺) */
+  --fg:#e9e9f2;        /* 文字 */
+  --sub:#9aa0b5;       /* サブ文字 */
+  --card:#282d40;      /* カード */
+  --accent:#e8b04a;    /* アクセント(あたたかい灯り色) */
+  --line:#3a4059;      /* ライン */
+}
+
+*{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body{ margin:0; padding:0; }
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic UI",sans-serif;
+  font-size:18px;
+  line-height:1.7;
+  -webkit-user-select:none; user-select:none;
+  padding-bottom:76px;   /* 下タブぶん */
+}
+
+/* ---- ヘッダー ---- */
+#hd{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 16px;
+  border-bottom:1px solid var(--line);
+  position:sticky; top:0; background:var(--bg); z-index:5;
+}
+.hd-title{
+  font-size:17px; color:var(--sub); letter-spacing:.04em;
+  flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  /* ロゴ連打の対象。押しても痕跡を残さない(見た目の変化なし) */
+}
+.hd-right{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.btn-lang{
+  background:transparent; color:var(--sub);
+  border:1px solid var(--line); border-radius:14px;
+  padding:8px 12px; font-size:16px; cursor:pointer; line-height:1;
+}
+.btn-exit{
+  background:transparent; color:var(--sub);
+  border:1px solid var(--line); border-radius:14px;
+  padding:8px 14px; font-size:15px; cursor:pointer; white-space:nowrap;
+}
+
+/* ---- 画面 ---- */
+#main{ max-width:640px; margin:0 auto; padding:20px 18px; }
+.screen{ animation:fade .25s ease; }
+.hidden{ display:none !important; }
+@keyframes fade{ from{opacity:0;} to{opacity:1;} }
+
+/* ---- ① ひといき: 呼吸の円 ---- */
+.breath-wrap{
+  display:flex; align-items:center; justify-content:center;
+  min-height:44vh; margin:10px 0 6px;
+}
+.breath-circle{
+  width:180px; height:180px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(circle at 50% 45%, rgba(232,176,74,.28), rgba(232,176,74,.06) 70%);
+  border:1px solid rgba(232,176,74,.35);
+  animation:breathe 10s ease-in-out infinite;   /* 4秒吸って6秒はく = 10秒周期 */
+}
+@keyframes breathe{
+  0%   { transform:scale(.72); }   /* いちばん小さい */
+  40%  { transform:scale(1); }     /* 4秒かけて ふくらむ(すって…) */
+  100% { transform:scale(.72); }   /* 6秒かけて ちぢむ(はいて…) */
+}
+.breath-phase{ color:var(--fg); font-size:20px; letter-spacing:.08em; }
+
+.oneline{
+  margin:8px auto 0; max-width:520px;
+  background:var(--card); border:1px solid var(--line); border-radius:18px;
+  padding:20px 22px; text-align:center; font-size:18px; line-height:1.9;
+  cursor:pointer;
+}
+.memo-foot{ text-align:center; margin-top:14px; }
+.link-set{
+  color:var(--sub); font-size:14px; text-decoration:underline;
+  text-underline-offset:4px; cursor:pointer; padding:8px 12px;
+}
+/* 初回一度きり案内の本文(改行を活かすため pre-line。textContentのみでレイアウト) */
+.intro-text{
+  color:var(--fg); font-size:16px; line-height:2; margin:0 0 18px;
+  white-space:pre-line; text-align:left;
+}
+
+/* ---- カード(おなじひと / しっておく / まどぐち) ---- */
+.cardlist{ display:flex; flex-direction:column; gap:16px; }
+.card{
+  background:var(--card); border:1px solid var(--line); border-radius:18px;
+  padding:18px 20px;
+}
+.card-title{
+  color:var(--accent); font-size:17px; font-weight:700; margin-bottom:10px;
+}
+.card-body{ font-size:17px; line-height:1.9; }
+.card-note{ color:var(--sub); font-size:14px; margin-top:4px; padding:2px 4px; }
+
+.intro{
+  color:var(--sub); font-size:16px; line-height:1.9;
+  margin:0 0 16px; padding:0 2px;
+}
+
+/* まどぐちカードの連絡先リンク */
+.contact{ margin-top:10px; display:flex; flex-direction:column; gap:8px; }
+.contact a{
+  color:var(--accent); text-decoration:none; font-size:16px;
+  border:1px solid var(--line); border-radius:14px; padding:10px 14px;
+  display:inline-block;
+}
+
+/* ---- ⑤ メモ ---- */
+.memo-input{
+  width:100%; background:var(--card); color:var(--fg);
+  border:1px solid var(--line); border-radius:16px;
+  padding:16px; font-size:18px; line-height:1.8; resize:vertical;
+  font-family:inherit; -webkit-user-select:text; user-select:text;
+}
+.btn-primary{
+  margin-top:16px; width:100%;
+  background:var(--accent); color:#221a08;
+  border:none; border-radius:16px; padding:16px; font-size:18px; font-weight:700;
+  cursor:pointer;
+}
+
+/* ---- 下タブ ---- */
+#tabbar{
+  position:fixed; left:0; right:0; bottom:0;
+  display:flex; background:var(--bg); border-top:1px solid var(--line);
+  padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  z-index:6;
+}
+.tab{
+  flex:1; background:transparent; border:none; color:var(--sub);
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  padding:6px 2px; font-size:12px; cursor:pointer; border-radius:12px;
+}
+.tab-ico{ font-size:16px; opacity:.85; }
+.tab.active{ color:var(--fg); }
+.tab.active .tab-ico{ opacity:1; }
+
+/* ---- オーバーレイ(メモ閲覧 / せってい) ---- */
+.overlay{
+  position:fixed; inset:0; background:rgba(10,12,20,.72);
+  display:flex; align-items:center; justify-content:center;
+  padding:20px; z-index:20;
+}
+.sheet-box{
+  background:var(--card); border:1px solid var(--line); border-radius:20px;
+  padding:20px; width:100%; max-width:520px; max-height:86vh; overflow-y:auto;
+}
+.sheet-title{ font-size:18px; font-weight:700; margin-bottom:14px; }
+
+.memo-view-list{ display:flex; flex-direction:column; gap:12px; margin:16px 0 14px; }
+.memo-item{
+  background:var(--bg); border:1px solid var(--line); border-radius:14px;
+  padding:12px 14px;
+}
+.memo-item-date{ color:var(--sub); font-size:13px; margin-bottom:6px; }
+.memo-item-body{ font-size:16px; line-height:1.8; white-space:pre-wrap; -webkit-user-select:text; user-select:text; }
+.memo-item-foot{ margin-top:8px; text-align:right; }
+.memo-empty{ color:var(--sub); font-size:15px; text-align:center; padding:14px; }
+
+.btn-line{
+  background:transparent; color:var(--fg);
+  border:1px solid var(--line); border-radius:14px;
+  padding:10px 16px; font-size:15px; cursor:pointer;
+}
+.btn-del{
+  background:transparent; color:var(--sub);
+  border:1px solid var(--line); border-radius:12px;
+  padding:6px 12px; font-size:14px; cursor:pointer;
+}
+
+/* せってい */
+.set-block{ margin-bottom:20px; }
+.set-label{ font-size:16px; margin-bottom:8px; }
+.set-note{ color:var(--sub); font-size:13px; line-height:1.7; margin-top:8px; }
+.text-in{
+  width:100%; background:var(--bg); color:var(--fg);
+  border:1px solid var(--line); border-radius:12px;
+  padding:12px; font-size:16px; font-family:inherit;
+  -webkit-user-select:text; user-select:text;
+}
+#set-exit-save{ margin-top:10px; }
+.tap-choices{ display:flex; gap:8px; }
+.tap-choices .tap-opt{
+  flex:1; background:transparent; color:var(--sub);
+  border:1px solid var(--line); border-radius:12px;
+  padding:10px 0; font-size:16px; cursor:pointer;
+}
+.tap-choices .tap-opt.sel{ color:#221a08; background:var(--accent); border-color:var(--accent); font-weight:700; }
+
+.credit{ margin:8px 0 0; }
+.credit-link{ color:var(--sub); font-size:13px; text-decoration:underline; text-underline-offset:3px; }
+.credit-ver{ color:var(--sub); font-size:12px; margin:6px 0 0; }
+#settings-close{ display:block; width:100%; margin-top:6px; }
+
+/* ---- 押下の手応え(.pressing) ---- ヘッダー名(ロゴ)には効かせない(痕跡を出さない) */
+.btn-exit.pressing,.btn-lang.pressing,.btn-primary.pressing,.btn-line.pressing,.btn-del.pressing,
+.tab.pressing,.oneline.pressing,.link-set.pressing,.tap-opt.pressing,.contact a.pressing{
+  filter:brightness(1.15); transform:scale(.98);
+}
+
+/* ---- トースト ---- */
+.toast{
+  position:fixed; left:50%; bottom:96px; transform:translateX(-50%);
+  background:#12151f; color:var(--fg);
+  border:1px solid var(--line); border-radius:14px;
+  padding:12px 18px; font-size:15px; max-width:88%; text-align:center;
+  z-index:30; box-shadow:0 6px 20px rgba(0,0,0,.4);
+}
+.toast .toast-sub{ display:block; color:var(--sub); font-size:13px; margin-top:6px; line-height:1.6; }
