@@ -25,6 +25,25 @@ function el(tag, cls, text){
 }
 function getEl(id){ return document.getElementById(id); }
 
+/* ---- 下タブの実寸を測って余白に反映(セーフエリア対応) ----
+   targetSdk36(Android15+)はエッジtoエッジ強制で、画面がナビゲーションバーの下まで描かれる。
+   下タブは自分の余白に env(safe-area-inset-bottom) を持つぶん背が高くなり、さらに
+   もじの大きさ(fs1/fs2)・言語によってもタブラベルの行が変わるので、固定値では本文の末尾が隠れる。
+   🔴 疑似DOM(スモーク)には style.setProperty が無い場合があるので必ずガードする。 */
+function applyBarSpace(){
+  const st = document.documentElement && document.documentElement.style;
+  if(!st || !st.setProperty) return;
+  const bar = getEl('tabbar');
+  if(!bar || !bar.getBoundingClientRect) return;
+  const h = Math.ceil(bar.getBoundingClientRect().height);
+  if(h > 0) st.setProperty('--tabbar-h', h + 'px');
+}
+function watchBarSpace(){
+  const bar = getEl('tabbar');
+  if(!bar || typeof ResizeObserver === 'undefined') return false;
+  try{ new ResizeObserver(applyBarSpace).observe(bar); return true; }catch(_){ return false; }
+}
+
 /* ---- 保存(端末内のみ) ---- */
 const LS_MEMOS = 'kyukei.memos', LS_PREFS = 'kyukei.prefs', LS_DRAFT = 'kyukei.draft';
 function loadJSON(key, fb){ try{ const v = JSON.parse(localStorage.getItem(key)); return v == null ? fb : v; }catch(e){ return fb; } }
@@ -432,6 +451,7 @@ function applyLooks(){
   document.body.classList.toggle('fs2', prefs.fs === 2);
   const meta = document.querySelector('meta[name="theme-color"]');
   if(meta) meta.setAttribute('content', THEME_BAR[prefs.theme] || THEME_BAR.night);
+  applyBarSpace();   // もじを大きくすると下タブの高さが変わる=本文の下余白も測り直す
 }
 function buildLooksChoices(){
   const tbox = getEl('looks-theme');
@@ -583,6 +603,15 @@ function init(){
   Sound.setBgmEnabled(prefs.bgm);
 
   showScreen('hitoiki');
+
+  /* 下タブの実寸を余白へ反映(セーフエリア対応)。以後は箱の大きさが変わるたびに測り直す */
+  applyBarSpace();
+  watchBarSpace();
+  if(typeof window !== 'undefined' && window.addEventListener){   /* ResizeObserverが無い環境の保険 */
+    window.addEventListener('load', applyBarSpace);
+    window.addEventListener('resize', applyBarSpace);
+    window.addEventListener('orientationchange', applyBarSpace);
+  }
 
   /* 初回だけ 一度きりの案内を出す(発見手段の確保・v0.3) */
   if(!prefs.introShown) showIntro();

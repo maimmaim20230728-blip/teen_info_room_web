@@ -27,7 +27,12 @@ const ids = new Set([...html.matchAll(/id="([^"]+)"/g)].map(m => m[1]));
 function makeEl(tag){
   const node = {
     tagName:(tag || 'div').toUpperCase(),
-    children:[], style:{}, dataset:{}, _ev:{}, _attr:{},
+    children:[], dataset:{}, _ev:{}, _attr:{},
+    /* style は素の代入(tap.jsのtouchAction)と setProperty(CSS変数 --tabbar-h)の両方が来る */
+    style:{ _props:{},
+      setProperty(k, v){ this._props[k] = String(v); },
+      getPropertyValue(k){ return (k in this._props) ? this._props[k] : ''; },
+      removeProperty(k){ delete this._props[k]; } },
     className:'', value:'', placeholder:'', src:'', href:'', target:'', rel:'', rows:0,
     type:'', inputMode:'', hidden:false, disabled:false, lang:'', dir:'',
     appendChild(c){ this.children.push(c); return c; },
@@ -109,6 +114,15 @@ function FakeAudioContext(){
   this.createBiquadFilter = function(){ return { type:'', frequency:fakeParam(), connect(){}, disconnect(){} }; };
 }
 
+/* ---- ResizeObserver スタブ(下タブの実寸監視・observe対象を記録するだけ) ---- */
+const roObserved = [];
+function FakeResizeObserver(cb){
+  this._cb = cb;
+  this.observe = t => { roObserved.push(t); };
+  this.unobserve = () => {};
+  this.disconnect = () => {};
+}
+
 /* ---- sandbox ---- */
 const documentStub = {
   documentElement:makeEl('html'), head:makeEl('head'), body:makeEl('body'), title:'',
@@ -126,7 +140,7 @@ const sandbox = {
   scrollTo(){},
   addEventListener(){},
   setTimeout:() => 0, setInterval:() => 0, clearInterval(){}, clearTimeout(){},
-  AudioContext:FakeAudioContext,
+  AudioContext:FakeAudioContext, ResizeObserver:FakeResizeObserver,
   Date
 };
 sandbox.window = sandbox;
@@ -459,7 +473,7 @@ console.log('[v0.3 リロード] introShown保持で案内が出ない・メモ�
     console, document:doc2, navigator:{ language:'ja-JP' },
     localStorage:localStorageStub, location:locationStub, scrollTo(){}, addEventListener(){},
     setTimeout:() => 0, setInterval:() => 0, clearInterval(){}, clearTimeout(){},
-    AudioContext:FakeAudioContext, Date
+    AudioContext:FakeAudioContext, ResizeObserver:FakeResizeObserver, Date
   };
   sb2.window = sb2; sb2.globalThis = sb2;
   vm.createContext(sb2);
@@ -489,7 +503,7 @@ function makeInstance(instStore){
   const sb = {
     console, document:doc, navigator:{ language:'ja-JP' }, localStorage:ls, location:locationStub,
     scrollTo(){}, addEventListener(){}, setTimeout:() => 0, setInterval:() => 0, clearInterval(){}, clearTimeout(){},
-    AudioContext:FakeAudioContext, Date
+    AudioContext:FakeAudioContext, ResizeObserver:FakeResizeObserver, Date
   };
   sb.window = sb; sb.globalThis = sb;
   vm.createContext(sb);
@@ -560,6 +574,58 @@ check('みための i18nキーが12言語で引ける',
   L12.every(c => KL[c].looksOpen && KL[c].looksTitle && KL[c].looksColor && KL[c].themeNight &&
     KL[c].themeLight && KL[c].themeCream && KL[c].themeBlack && KL[c].looksText &&
     KL[c].fsNormal && KL[c].fsLarge && KL[c].fsXL));
+
+/* ---- [セーフエリア] 下タブ/ステータスバーに隠れない ----
+   targetSdk36(Android15+)はエッジtoエッジ強制で、WebViewが端末のステータスバー(上)と
+   ナビゲーションバー(下)の下まで描かれる。#tabbar は自分の余白に safe-area を持つぶん
+   実際の高さが増えるので、本文側がCSSの固定値(76px)のままだと末尾のカードが下タブに隠れる。 */
+console.log('[セーフエリア] 下タブ/ステータスバーに隠れない');
+const cssTxt = fs.readFileSync('./style.css', 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, '');
+check('--tabbar-h のフォールバックに env(safe-area-inset-bottom)',
+  /--tabbar-h:calc\(76px\+env\(safe-area-inset-bottom\)\)/.test(cssTxt));
+check('body の下余白が max(CSS下限, 実測+10px)',
+  /body\{[^}]*padding-bottom:max\(calc\(76px\+env\(safe-area-inset-bottom\)\),calc\(var\(--tabbar-h\)\+10px\)\)/.test(cssTxt));
+check('body に固定値の padding-bottom:76px が残っていない', !/padding-bottom:76px/.test(cssTxt));
+check('ヘッダーの上余白に env(safe-area-inset-top)(時計・電池と重ならない)',
+  /#hd\{[^}]*padding:calc\(28px\+env\(safe-area-inset-top\)\)/.test(cssTxt));
+check('ヘッダーの最低高さも env(safe-area-inset-top) ぶん増える',
+  /#hd\{[^}]*min-height:calc\(130px\+env\(safe-area-inset-top\)\)/.test(cssTxt));
+check('下タブは padding-bottom の safe-area を保ったまま左右も避ける',
+  /#tabbar\{[^}]*padding:6px4pxcalc\(6px\+env\(safe-area-inset-bottom\)\)/.test(cssTxt) &&
+  /#tabbar\{[^}]*padding-left:max\(4px,env\(safe-area-inset-left\)\)/.test(cssTxt) &&
+  /#tabbar\{[^}]*padding-right:max\(4px,env\(safe-area-inset-right\)\)/.test(cssTxt));
+check('本文の左右も横向き時のノッチを避ける',
+  /#main\{[^}]*env\(safe-area-inset-right\)/.test(cssTxt) && /#main\{[^}]*env\(safe-area-inset-left\)/.test(cssTxt));
+check('トーストも --tabbar-h 基準(下タブの上に出る)',
+  /\.toast\{[^}]*bottom:max\(calc\(96px\+env\(safe-area-inset-bottom\)\),calc\(var\(--tabbar-h\)\+12px\)\)/.test(cssTxt));
+check('オーバーレイ(メモ/せってい/みため/言語/初回案内)の余白がsafe-area',
+  /\.overlay\{[^}]*padding:max\(20px,env\(safe-area-inset-top\)\)max\(20px,env\(safe-area-inset-right\)\)max\(20px,env\(safe-area-inset-bottom\)\)max\(20px,env\(safe-area-inset-left\)\)/.test(cssTxt));
+check('シートの最大高さから上下バーぶんを引いている',
+  /\.sheet-box\{[^}]*max-height:calc\(86vh-env\(safe-area-inset-top\)-env\(safe-area-inset-bottom\)\)/.test(cssTxt));
+check('applyBarSpace が下タブの実寸を --tabbar-h に入れている',
+  /function applyBarSpace\(\)/.test(appSrc) && /st\.setProperty\('--tabbar-h', h \+ 'px'\)/.test(appSrc));
+check('applyBarSpace は style.setProperty が無い環境でも早期returnする(疑似DOM対策)',
+  /if\(!st \|\| !st\.setProperty\) return;/.test(appSrc));
+check('ResizeObserver で下タブを見張っている',
+  /function watchBarSpace\(\)/.test(appSrc) && /new ResizeObserver\(applyBarSpace\)/.test(appSrc));
+check('init で applyBarSpace(); watchBarSpace(); を呼ぶ', /applyBarSpace\(\);\s*watchBarSpace\(\);/.test(appSrc));
+check('load / resize / orientationchange でも測り直す(ResizeObserverが無い環境の保険)',
+  /window\.addEventListener\('load', applyBarSpace\)/.test(appSrc) &&
+  /window\.addEventListener\('resize', applyBarSpace\)/.test(appSrc) &&
+  /window\.addEventListener\('orientationchange', applyBarSpace\)/.test(appSrc));
+const looksFn = /function applyLooks\(\)\{[\s\S]*?\n\}/.exec(appSrc);
+check('applyLooks の中でも測り直す(もじを大きくすると下タブの高さが変わる)',
+  !!looksFn && /applyBarSpace\(\);/.test(looksFn[0]));
+/* 実挙動: 起動時に --tabbar-h が下タブの実寸(疑似DOMの矩形=50px)で入る */
+check('起動時に --tabbar-h が実測値で入る', documentStub.documentElement.style.getPropertyValue('--tabbar-h') === '50px');
+check('ResizeObserver が #tabbar を observe している', roObserved.indexOf(byId('tabbar')) >= 0);
+/* 古い環境/疑似DOM(style.setProperty 無し)でも例外にならない */
+const savedStyle = documentStub.documentElement.style;
+documentStub.documentElement.style = {};
+let guardOk = true;
+try{ sandbox.applyBarSpace(); }catch(e){ guardOk = false; }
+documentStub.documentElement.style = savedStyle;
+check('style.setProperty が無い環境でも applyBarSpace が例外を出さない', guardOk);
 
 console.log('');
 if(fails.length){ console.log('SMOKE NG: ' + fails.length + '件失敗'); process.exit(1); }

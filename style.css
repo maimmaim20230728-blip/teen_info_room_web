@@ -11,6 +11,9 @@
   --accent-ink:#221a08;/* アクセントの上に載せる文字色 */
   --line:#3a4059;      /* ライン */
   --toast-bg:#12151f;  /* トースト背景 */
+  /* 下タブの実際の高さ。JSが実測値で上書きする。ここはJSが動く前のフォールバック
+     (targetSdk36=エッジtoエッジ強制で、下タブは自分の余白にsafe-areaを足すぶん背が高くなる) */
+  --tabbar-h:calc(76px + env(safe-area-inset-bottom));
 }
 
 /* ---- がめんの いろ(アクセシビリティ・2026-08-05ヒロ要望) ----
@@ -39,7 +42,8 @@ body{
   font-size:18px;
   line-height:1.7;
   -webkit-user-select:none; user-select:none;
-  padding-bottom:76px;   /* 下タブぶん */
+  /* 下タブぶん。「CSSだけで安全な下限」と「実測+10px」の大きい方=JSの計測が遅れても下限を割らない */
+  padding-bottom:max(calc(76px + env(safe-area-inset-bottom)), calc(var(--tabbar-h) + 10px));
 }
 /* ---- もじの 大きさ(アクセシビリティ) ----
    読み物の文字はすべて body 基準の em にしてあるので、ここを変えると全体が追従する。
@@ -50,8 +54,10 @@ body.fs2{ font-size:23px; }
 /* ---- ヘッダー ---- */
 #hd{
   display:flex; align-items:center; justify-content:space-between;
-  padding:28px 16px;                 /* 縦paddingを約2倍(14→28)=指で押しやすい厚み */
-  min-height:130px;                  /* ヘッダー縦幅を約2倍に(旧≈65px→130px)。align-items:centerで中身は縦中央のまま */
+  /* 縦paddingを約2倍(14→28)=指で押しやすい厚み。上はステータスバー(時計・電池)ぶんを足す */
+  padding:calc(28px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
+          28px max(16px, env(safe-area-inset-left));
+  min-height:calc(130px + env(safe-area-inset-top));   /* ヘッダー縦幅を約2倍に(旧≈65px→130px)。align-items:centerで中身は縦中央のまま */
   border-bottom:1px solid var(--line);
   position:sticky; top:0; background:var(--bg); z-index:5;
 }
@@ -75,7 +81,10 @@ body.fs2{ font-size:23px; }
 }
 
 /* ---- 画面 ---- */
-#main{ max-width:640px; margin:0 auto; padding:20px 18px; }
+#main{
+  max-width:640px; margin:0 auto;
+  padding:20px max(18px, env(safe-area-inset-right)) 20px max(18px, env(safe-area-inset-left));   /* 横向き時のノッチ避け */
+}
 .screen{ animation:fade .25s ease; }
 .hidden{ display:none !important; }
 @keyframes fade{ from{opacity:0;} to{opacity:1;} }
@@ -160,6 +169,8 @@ body.fs2{ font-size:23px; }
   position:fixed; left:0; right:0; bottom:0;
   display:flex; background:var(--bg); border-top:1px solid var(--line);
   padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+  /* 横は既存の4pxを下限に据えたまま、ノッチ側だけ広げる */
+  padding-left:max(4px, env(safe-area-inset-left)); padding-right:max(4px, env(safe-area-inset-right));
   z-index:6;
 }
 .tab{
@@ -175,11 +186,15 @@ body.fs2{ font-size:23px; }
 .overlay{
   position:fixed; inset:0; background:rgba(10,12,20,.72);
   display:flex; align-items:center; justify-content:center;
-  padding:20px; z-index:20;
+  /* inset:0 は端末の端まで=ステータスバー/ナビバーの下も含む。余白でその内側に寄せる */
+  padding:max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right))
+          max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+  z-index:20;
 }
 .sheet-box{
   background:var(--card); border:1px solid var(--line); border-radius:20px;
-  padding:20px; width:100%; max-width:520px; max-height:86vh; overflow-y:auto;
+  padding:20px; width:100%; max-width:520px; overflow-y:auto;
+  max-height:calc(86vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));   /* 上下バーぶんを引く */
 }
 .sheet-title{ font-size:1em; font-weight:700; margin-bottom:14px; }
 
@@ -238,7 +253,8 @@ body.fs2{ font-size:23px; }
 
 /* ---- トースト ---- */
 .toast{
-  position:fixed; left:50%; bottom:96px; transform:translateX(-50%);
+  position:fixed; left:50%; transform:translateX(-50%);
+  bottom:max(calc(96px + env(safe-area-inset-bottom)), calc(var(--tabbar-h) + 12px));   /* 下タブの実寸の上に出す */
   background:var(--toast-bg); color:var(--fg);
   border:1px solid var(--line); border-radius:14px;
   padding:12px 18px; font-size:.833em; max-width:88%; text-align:center;
