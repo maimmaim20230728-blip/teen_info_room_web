@@ -45,6 +45,8 @@
       </div>
     </div>
     <div id="oneline" class="oneline"></div>
+    <!-- みため(いろ/もじ)の入口。フッターの上・目立たない下線リンク(アクセシビリティは隠さず見える場所に) -->
+    <div class="memo-foot"><span id="open-looks" class="link-set" data-i18n="looksOpen">みため(いろ と もじ)</span></div>
   </section>
 
   <!-- ② データ(旧おなじひと。タブラベルのみ「データ」・内部id=onajiは不変) -->
@@ -104,6 +106,22 @@
   </div>
 </div>
 
+<!-- みため(いろ/もじ)。ひといき下部のリンクから。既定=よる(現行)・明るい色や強コントラストを選べる -->
+<div id="looks" class="overlay hidden">
+  <div class="sheet-box">
+    <div class="sheet-title" data-i18n="looksTitle">みための せってい</div>
+    <div class="set-block">
+      <div class="set-label" data-i18n="looksColor">がめんの いろ</div>
+      <div id="looks-theme" class="tap-choices"></div>
+    </div>
+    <div class="set-block">
+      <div class="set-label" data-i18n="looksText">もじの 大きさ</div>
+      <div id="looks-fs" class="tap-choices"></div>
+    </div>
+    <button id="looks-close" class="btn-line" data-i18n="close2">とじる</button>
+  </div>
+</div>
+
 <!-- せってい オーバーレイ(タブにはしない) -->
 <div id="settings" class="overlay hidden">
   <div class="sheet-box">
@@ -130,7 +148,7 @@
     <div class="set-block">
       <p class="set-note" data-i18n="privacyNote">記録はこの端末の中だけ。どこにも送信されません</p>
       <p class="credit"><a id="credit-link" class="credit-link" href="https://soyogi.hp.peraichi.com/top" target="_blank" rel="noopener" data-i18n="credit">アプリ開発：介護と支援の相談どころ　そよぎ</a></p>
-      <p class="credit-ver" data-i18n="version">バージョン 1.0</p>
+      <p class="credit-ver" data-i18n="version">バージョン 1.1</p>
     </div>
 
     <button id="settings-close" class="btn-line" data-i18n="close2">とじる</button>

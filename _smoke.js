@@ -33,6 +33,7 @@ function makeEl(tag){
     appendChild(c){ this.children.push(c); return c; },
     get childNodes(){ return this.children; },
     setAttribute(k, v){ this._attr[k] = v; }, getAttribute(k){ return (k in this._attr) ? this._attr[k] : null; },
+    removeAttribute(k){ delete this._attr[k]; },
     addEventListener(t, h){ (this._ev[t] = this._ev[t] || []).push(h); },
     removeEventListener(){},
     focus(){}, click(){}, scrollIntoView(){}, scrollTo(){}, remove(){},
@@ -521,6 +522,44 @@ B.sandbox.saveMemo();
 check('「そっと しまう」で kyukei.draft が消える', !('kyukei.draft' in draftStore));
 check('しまった内容は kyukei.memos に移る', JSON.parse(draftStore['kyukei.memos']).some(e => e.m === 'かきかけ です'));
 check('しまった後、textarea は空になる', B.byId('memo-input').value === '');
+
+/* ---- [v1.2 みため] がめんの いろ4種 + もじの大きさ3段階(アクセシビリティ) ---- */
+console.log('[v1.2 みため] いろ4種・もじ3段階・保存と再起動の持ちこし');
+const lkStore = {};   // このテスト専用の端末
+const LK = makeInstance(lkStore);
+check('既定は よる(data-theme無し)・ふつう', LK.sandbox.document.body.getAttribute('data-theme') == null &&
+  !LK.sandbox.document.body.classList.contains('fs1') && !LK.sandbox.document.body.classList.contains('fs2'));
+LK.sandbox.openLooks();
+check('みためシートが開く', !LK.byId('looks').classList.contains('hidden'));
+check('いろの選択肢が4つ', LK.byId('looks-theme').children.filter(x => x.tagName === 'BUTTON').length === 4);
+check('もじの選択肢が3つ', LK.byId('looks-fs').children.filter(x => x.tagName === 'BUTTON').length === 3);
+check('既定で「よる」と「ふつう」が選択中', LK.byId('looks-theme').children[0].className.indexOf('sel') >= 0 &&
+  LK.byId('looks-fs').children[0].className.indexOf('sel') >= 0);
+/* しろ を選ぶ */
+tap(LK.byId('looks-theme').children[1]);
+check('しろ を選ぶと body[data-theme=light]', LK.sandbox.document.body.getAttribute('data-theme') === 'light');
+check('しろ が保存される', JSON.parse(lkStore['kyukei.prefs']).theme === 'light');
+/* とくだい を選ぶ */
+tap(LK.byId('looks-fs').children[2]);
+check('とくだい で body.fs2', LK.sandbox.document.body.classList.contains('fs2') && !LK.sandbox.document.body.classList.contains('fs1'));
+check('とくだい が保存される', JSON.parse(lkStore['kyukei.prefs']).fs === 2);
+LK.sandbox.closeLooks();
+check('とじるでシートが閉じる', LK.byId('looks').classList.contains('hidden'));
+/* 再起動で持ちこし */
+const LK2 = makeInstance(lkStore);
+check('再起動しても しろ/とくだい のまま', LK2.sandbox.document.body.getAttribute('data-theme') === 'light' &&
+  LK2.sandbox.document.body.classList.contains('fs2'));
+check('再起動時 みためシートは閉じている', LK2.byId('looks').classList.contains('hidden'));
+/* 壊れた保存値は既定へ */
+const badStore = { 'kyukei.prefs': JSON.stringify({ theme:'neon', fs:9, introShown:true }) };
+const LK3 = makeInstance(badStore);
+check('壊れた保存値(theme:neon/fs:9)は よる/ふつう へ復旧', LK3.sandbox.document.body.getAttribute('data-theme') == null &&
+  !LK3.sandbox.document.body.classList.contains('fs1') && !LK3.sandbox.document.body.classList.contains('fs2'));
+/* i18n 11キーが12言語で引ける(パリティ検査は上で済・ここは代表値) */
+check('みための i18nキーが12言語で引ける',
+  L12.every(c => KL[c].looksOpen && KL[c].looksTitle && KL[c].looksColor && KL[c].themeNight &&
+    KL[c].themeLight && KL[c].themeCream && KL[c].themeBlack && KL[c].looksText &&
+    KL[c].fsNormal && KL[c].fsLarge && KL[c].fsXL));
 
 console.log('');
 if(fails.length){ console.log('SMOKE NG: ' + fails.length + '件失敗'); process.exit(1); }

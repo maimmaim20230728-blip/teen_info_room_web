@@ -31,11 +31,16 @@ function loadJSON(key, fb){ try{ const v = JSON.parse(localStorage.getItem(key))
 function saveJSON(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){} }
 let memos = loadJSON(LS_MEMOS, []);
 if(!Array.isArray(memos)) memos = [];
-let prefs = Object.assign({ exitUrl:EXIT_DEFAULT, memoTaps:DEFAULT_TAPS, bgm:true, introShown:false, lang:null }, loadJSON(LS_PREFS, {}));
+let prefs = Object.assign({ exitUrl:EXIT_DEFAULT, memoTaps:DEFAULT_TAPS, bgm:true, introShown:false, lang:null, theme:'night', fs:0 }, loadJSON(LS_PREFS, {}));
 if(TAP_CHOICES.indexOf(prefs.memoTaps) < 0) prefs.memoTaps = DEFAULT_TAPS;
 if(typeof prefs.bgm !== 'boolean') prefs.bgm = true;
 if(typeof prefs.introShown !== 'boolean') prefs.introShown = false;
 if(LANG_CODES.indexOf(prefs.lang) < 0) prefs.lang = null;
+/* みため(アクセシビリティ): がめんの いろ4種 と もじの大きさ3段階。既定=よる/ふつう(現行の見た目) */
+const THEME_CODES = ['night','light','cream','black'];
+const THEME_BAR = { night:'#1e2230', light:'#f6f7fa', cream:'#f7f1e3', black:'#000000' };   // meta theme-color連動
+if(THEME_CODES.indexOf(prefs.theme) < 0) prefs.theme = 'night';
+if([0,1,2].indexOf(prefs.fs) < 0) prefs.fs = 0;
 function saveMemos(){ saveJSON(LS_MEMOS, memos); }
 function savePrefs(){ saveJSON(LS_PREFS, prefs); }
 
@@ -416,6 +421,48 @@ function openSettings(){
   getEl('settings').classList.remove('hidden');
 }
 function closeSettings(){ getEl('settings').classList.add('hidden'); }
+
+/* ================= みため(いろ/もじ・アクセシビリティ) =================
+   既定=よる(現行の見た目)・ふつう。明るい画面が見やすい人向けに しろ/クリーム、
+   はっきりしたコントラストが読みやすい人向けに くろ。ひといき下部のリンクから開く(隠さない)。 */
+function applyLooks(){
+  if(prefs.theme === 'night') document.body.removeAttribute('data-theme');
+  else document.body.setAttribute('data-theme', prefs.theme);
+  document.body.classList.toggle('fs1', prefs.fs === 1);
+  document.body.classList.toggle('fs2', prefs.fs === 2);
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute('content', THEME_BAR[prefs.theme] || THEME_BAR.night);
+}
+function buildLooksChoices(){
+  const tbox = getEl('looks-theme');
+  if(tbox){
+    tbox.textContent = '';
+    const LBL = { night:'themeNight', light:'themeLight', cream:'themeCream', black:'themeBlack' };
+    THEME_CODES.forEach(code => {
+      const b = el('button', 'tap-opt' + (code === prefs.theme ? ' sel' : ''), T(LBL[code]));
+      Tap.bind(b, () => {
+        prefs.theme = code; savePrefs(); applyLooks();
+        document.querySelectorAll('#looks-theme .tap-opt').forEach((x, i) => x.classList.toggle('sel', THEME_CODES[i] === code));
+      });
+      tbox.appendChild(b);
+    });
+  }
+  const fbox = getEl('looks-fs');
+  if(fbox){
+    fbox.textContent = '';
+    const FS_LBL = ['fsNormal','fsLarge','fsXL'];
+    FS_LBL.forEach((key, n) => {
+      const b = el('button', 'tap-opt' + (n === prefs.fs ? ' sel' : ''), T(key));
+      Tap.bind(b, () => {
+        prefs.fs = n; savePrefs(); applyLooks();
+        document.querySelectorAll('#looks-fs .tap-opt').forEach((x, i) => x.classList.toggle('sel', i === n));
+      });
+      fbox.appendChild(b);
+    });
+  }
+}
+function openLooks(){ buildLooksChoices(); getEl('looks').classList.remove('hidden'); }
+function closeLooks(){ getEl('looks').classList.add('hidden'); }
 function saveExitUrl(){
   const v = (getEl('set-exit').value || '').trim();
   prefs.exitUrl = v || EXIT_DEFAULT;
@@ -454,7 +501,7 @@ function applyLang(){
   if(onelineIdx >= T('onelines').length) onelineIdx = 0;
   showOneline();
   setBreathText();
-  buildTapChoices(); buildBgmToggle(); buildLangChoices();
+  buildTapChoices(); buildBgmToggle(); buildLangChoices(); buildLooksChoices();
   if(getEl('intro') && !getEl('intro').classList.contains('hidden')) setIntroText();
 }
 
@@ -501,6 +548,10 @@ function init(){
   Tap.bind(getEl('oneline'), nextOneline);
   Tap.bind(getEl('open-settings'), openSettings);   // せっていはメモの部屋の下部からのみ(可視UIには出さない)
 
+  /* みため(いろ/もじ)。こちらはアクセシビリティなので隠さず、ひといき下部のリンクから開く */
+  Tap.bind(getEl('open-looks'), openLooks);
+  Tap.bind(getEl('looks-close'), closeLooks);
+
   /* メモの部屋(書く+一覧が一体・アプリ名連打で開く) */
   Tap.bind(getEl('memo-save'), saveMemo);
   Tap.bind(getEl('memo-view-close'), closeMemoView);
@@ -514,11 +565,15 @@ function init(){
   /* 初回案内 */
   Tap.bind(getEl('intro-ok'), closeIntro);
 
-  /* メモの部屋・せってい・案内・言語シートは起動時に必ず閉じておく(開いた状態は保存しない=再起動で必ず閉じている) */
+  /* メモの部屋・せってい・案内・言語シート・みためは起動時に必ず閉じておく(開いた状態は保存しない=再起動で必ず閉じている) */
   closeMemoView();
   closeSettings();
   closeLangSheet();
+  closeLooks();
   getEl('intro').classList.add('hidden');
+
+  /* みため(いろ/もじ)を保存値どおりに反映してから描画する(ちらつき防止) */
+  applyLooks();
 
   /* 言語を反映(アプリ名・全ラベル・カード・一言・呼吸をまとめて描画) */
   applyLang();

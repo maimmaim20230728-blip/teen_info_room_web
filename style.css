@@ -8,7 +8,26 @@
   --sub:#9aa0b5;       /* サブ文字 */
   --card:#282d40;      /* カード */
   --accent:#e8b04a;    /* アクセント(あたたかい灯り色) */
+  --accent-ink:#221a08;/* アクセントの上に載せる文字色 */
   --line:#3a4059;      /* ライン */
+  --toast-bg:#12151f;  /* トースト背景 */
+}
+
+/* ---- がめんの いろ(アクセシビリティ・2026-08-05ヒロ要望) ----
+   既定=よる(現行のまま)。明るい画面が見やすい人向けに しろ/クリーム、
+   コントラストがはっきりした方が読める人向けに くろ を用意する。
+   明るいテーマではアクセントを濃い琥珀に落とす(白地に#e8b04aは文字として薄すぎるため)。 */
+body[data-theme="light"]{
+  --bg:#f6f7fa; --fg:#262b3d; --sub:#5c6377; --card:#ffffff;
+  --accent:#8a5a12; --accent-ink:#ffffff; --line:#d8dce8; --toast-bg:#ffffff;
+}
+body[data-theme="cream"]{
+  --bg:#f7f1e3; --fg:#3b3427; --sub:#756c58; --card:#fffaf0;
+  --accent:#8a5a12; --accent-ink:#ffffff; --line:#e2d8c4; --toast-bg:#fffaf0;
+}
+body[data-theme="black"]{
+  --bg:#000000; --fg:#ffffff; --sub:#c8c8cf; --card:#15151b;
+  --accent:#ffcf6e; --accent-ink:#221a08; --line:#50505c; --toast-bg:#15151b;
 }
 
 *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -22,11 +41,17 @@ body{
   -webkit-user-select:none; user-select:none;
   padding-bottom:76px;   /* 下タブぶん */
 }
+/* ---- もじの 大きさ(アクセシビリティ) ----
+   読み物の文字はすべて body 基準の em にしてあるので、ここを変えると全体が追従する。
+   ヘッダー/下タブは固定(大きくすると崩れる場所は据え置き) */
+body.fs1{ font-size:20px; }
+body.fs2{ font-size:23px; }
 
 /* ---- ヘッダー ---- */
 #hd{
   display:flex; align-items:center; justify-content:space-between;
-  padding:14px 16px;
+  padding:28px 16px;                 /* 縦paddingを約2倍(14→28)=指で押しやすい厚み */
+  min-height:130px;                  /* ヘッダー縦幅を約2倍に(旧≈65px→130px)。align-items:centerで中身は縦中央のまま */
   border-bottom:1px solid var(--line);
   position:sticky; top:0; background:var(--bg); z-index:5;
 }
@@ -40,11 +65,13 @@ body{
   background:transparent; color:var(--sub);
   border:1px solid var(--line); border-radius:14px;
   padding:8px 12px; font-size:16px; cursor:pointer; line-height:1;
+  min-height:44px;                   /* 指で押しやすい最小タップ高さ */
 }
 .btn-exit{
   background:transparent; color:var(--sub);
   border:1px solid var(--line); border-radius:14px;
   padding:8px 14px; font-size:15px; cursor:pointer; white-space:nowrap;
+  min-height:44px;                   /* 指で押しやすい最小タップ高さ */
 }
 
 /* ---- 画面 ---- */
@@ -70,22 +97,22 @@ body{
   40%  { transform:scale(1); }     /* 4秒かけて ふくらむ(すって…) */
   100% { transform:scale(.72); }   /* 6秒かけて ちぢむ(はいて…) */
 }
-.breath-phase{ color:var(--fg); font-size:20px; letter-spacing:.08em; }
+.breath-phase{ color:var(--fg); font-size:1.111em; letter-spacing:.08em; }
 
 .oneline{
   margin:8px auto 0; max-width:520px;
   background:var(--card); border:1px solid var(--line); border-radius:18px;
-  padding:20px 22px; text-align:center; font-size:18px; line-height:1.9;
+  padding:20px 22px; text-align:center; font-size:1em; line-height:1.9;
   cursor:pointer;
 }
 .memo-foot{ text-align:center; margin-top:14px; }
 .link-set{
-  color:var(--sub); font-size:14px; text-decoration:underline;
+  color:var(--sub); font-size:.778em; text-decoration:underline;
   text-underline-offset:4px; cursor:pointer; padding:8px 12px;
 }
 /* 初回一度きり案内の本文(改行を活かすため pre-line。textContentのみでレイアウト) */
 .intro-text{
-  color:var(--fg); font-size:16px; line-height:2; margin:0 0 18px;
+  color:var(--fg); font-size:.889em; line-height:2; margin:0 0 18px;
   white-space:pre-line; text-align:start;   /* start=LTRで左・RTL(ar)で右 */
 }
 
@@ -96,20 +123,20 @@ body{
   padding:18px 20px;
 }
 .card-title{
-  color:var(--accent); font-size:17px; font-weight:700; margin-bottom:10px;
+  color:var(--accent); font-size:.944em; font-weight:700; margin-bottom:10px;
 }
-.card-body{ font-size:17px; line-height:1.9; }
-.card-note{ color:var(--sub); font-size:14px; margin-top:4px; padding:2px 4px; }
+.card-body{ font-size:.944em; line-height:1.9; }
+.card-note{ color:var(--sub); font-size:.778em; margin-top:4px; padding:2px 4px; }
 
 .intro{
-  color:var(--sub); font-size:16px; line-height:1.9;
+  color:var(--sub); font-size:.889em; line-height:1.9;
   margin:0 0 16px; padding:0 2px;
 }
 
 /* まどぐちカードの連絡先リンク */
 .contact{ margin-top:10px; display:flex; flex-direction:column; gap:8px; }
 .contact a{
-  color:var(--accent); text-decoration:none; font-size:16px;
+  color:var(--accent); text-decoration:none; font-size:.889em;
   border:1px solid var(--line); border-radius:14px; padding:10px 14px;
   display:inline-block;
 }
@@ -118,13 +145,13 @@ body{
 .memo-input{
   width:100%; background:var(--card); color:var(--fg);
   border:1px solid var(--line); border-radius:16px;
-  padding:16px; font-size:18px; line-height:1.8; resize:vertical;
+  padding:16px; font-size:1em; line-height:1.8; resize:vertical;
   font-family:inherit; -webkit-user-select:text; user-select:text;
 }
 .btn-primary{
   margin-top:16px; width:100%;
-  background:var(--accent); color:#221a08;
-  border:none; border-radius:16px; padding:16px; font-size:18px; font-weight:700;
+  background:var(--accent); color:var(--accent-ink);
+  border:none; border-radius:16px; padding:16px; font-size:1em; font-weight:700;
   cursor:pointer;
 }
 
@@ -154,37 +181,37 @@ body{
   background:var(--card); border:1px solid var(--line); border-radius:20px;
   padding:20px; width:100%; max-width:520px; max-height:86vh; overflow-y:auto;
 }
-.sheet-title{ font-size:18px; font-weight:700; margin-bottom:14px; }
+.sheet-title{ font-size:1em; font-weight:700; margin-bottom:14px; }
 
 .memo-view-list{ display:flex; flex-direction:column; gap:12px; margin:16px 0 14px; }
 .memo-item{
   background:var(--bg); border:1px solid var(--line); border-radius:14px;
   padding:12px 14px;
 }
-.memo-item-date{ color:var(--sub); font-size:13px; margin-bottom:6px; }
-.memo-item-body{ font-size:16px; line-height:1.8; white-space:pre-wrap; -webkit-user-select:text; user-select:text; }
+.memo-item-date{ color:var(--sub); font-size:.722em; margin-bottom:6px; }
+.memo-item-body{ font-size:.889em; line-height:1.8; white-space:pre-wrap; -webkit-user-select:text; user-select:text; }
 .memo-item-foot{ margin-top:8px; text-align:end; }   /* end=LTRで右・RTL(ar)で左 */
-.memo-empty{ color:var(--sub); font-size:15px; text-align:center; padding:14px; }
+.memo-empty{ color:var(--sub); font-size:.833em; text-align:center; padding:14px; }
 
 .btn-line{
   background:transparent; color:var(--fg);
   border:1px solid var(--line); border-radius:14px;
-  padding:10px 16px; font-size:15px; cursor:pointer;
+  padding:10px 16px; font-size:.833em; cursor:pointer;
 }
 .btn-del{
   background:transparent; color:var(--sub);
   border:1px solid var(--line); border-radius:12px;
-  padding:6px 12px; font-size:14px; cursor:pointer;
+  padding:6px 12px; font-size:.778em; cursor:pointer;
 }
 
 /* せってい */
 .set-block{ margin-bottom:20px; }
-.set-label{ font-size:16px; margin-bottom:8px; }
-.set-note{ color:var(--sub); font-size:13px; line-height:1.7; margin-top:8px; }
+.set-label{ font-size:.889em; margin-bottom:8px; }
+.set-note{ color:var(--sub); font-size:.722em; line-height:1.7; margin-top:8px; }
 .text-in{
   width:100%; background:var(--bg); color:var(--fg);
   border:1px solid var(--line); border-radius:12px;
-  padding:12px; font-size:16px; font-family:inherit;
+  padding:12px; font-size:.889em; font-family:inherit;
   -webkit-user-select:text; user-select:text;
 }
 #set-exit-save{ margin-top:10px; }
@@ -192,11 +219,11 @@ body{
 .tap-choices .tap-opt{
   flex:1; background:transparent; color:var(--sub);
   border:1px solid var(--line); border-radius:12px;
-  padding:10px 0; font-size:16px; cursor:pointer;
+  padding:10px 0; font-size:.889em; cursor:pointer;
 }
 /* 🌐言語シートは12言語=折り返して内容幅で並べる(等分割にしない) */
 #lang-choices .tap-opt{ flex:0 1 auto; padding:10px 14px; }
-.tap-choices .tap-opt.sel{ color:#221a08; background:var(--accent); border-color:var(--accent); font-weight:700; }
+.tap-choices .tap-opt.sel{ color:var(--accent-ink); background:var(--accent); border-color:var(--accent); font-weight:700; }
 
 .credit{ margin:8px 0 0; }
 .credit-link{ color:var(--sub); font-size:13px; text-decoration:underline; text-underline-offset:3px; }
@@ -212,9 +239,9 @@ body{
 /* ---- トースト ---- */
 .toast{
   position:fixed; left:50%; bottom:96px; transform:translateX(-50%);
-  background:#12151f; color:var(--fg);
+  background:var(--toast-bg); color:var(--fg);
   border:1px solid var(--line); border-radius:14px;
-  padding:12px 18px; font-size:15px; max-width:88%; text-align:center;
+  padding:12px 18px; font-size:.833em; max-width:88%; text-align:center;
   z-index:30; box-shadow:0 6px 20px rgba(0,0,0,.4);
 }
-.toast .toast-sub{ display:block; color:var(--sub); font-size:13px; margin-top:6px; line-height:1.6; }
+.toast .toast-sub{ display:block; color:var(--sub); font-size:.722em; margin-top:6px; line-height:1.6; }
