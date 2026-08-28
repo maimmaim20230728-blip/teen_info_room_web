@@ -190,7 +190,7 @@ check('可視UI(ヘッダー+4タブ+タブバー)に せってい/メモ/そよ
   !visible.includes('せってい') && !visible.includes('メモ') && !visible.includes('そよぎ'));
 check('せってい入口(#open-settings)は可視UIに無く、メモの部屋の中にある',
   visible.indexOf('open-settings') < 0 && html.indexOf('id="open-settings"') > visEnd);
-check('クレジット(そよぎ/HPリンク)はせってい内=隠し領域にある', html.indexOf('soyogi.hp.peraichi.com') > visEnd);
+check('クレジット(そよぎ/HPリンク)はせってい内=隠し領域にある', html.indexOf('soudansoyogi.com') > visEnd);
 
 /* ---- [v0.1] メモの入口が どこにも見えない(4タブ・scr-memoは廃止) ---- */
 console.log('[v0.1] メモの入口が画面に無い(4タブ)');
