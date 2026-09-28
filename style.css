@@ -142,6 +142,28 @@ body.fs2{ font-size:23px; }
   margin:0 0 16px; padding:0 2px;
 }
 
+/* ---- 障害のある家族がいるとき(v1.6・しっておくの下) ---- */
+.family-list{ margin-top:30px; padding-top:22px; border-top:1px solid var(--line); }
+.fam-head{ margin:0; font-size:1.056em; font-weight:700; color:var(--fg); line-height:1.6; }
+.fam-sub{ margin:10px 0 -4px; font-size:.889em; font-weight:700; color:var(--sub); line-height:1.6; }
+.fam-hint{ margin:-8px 0 0; color:var(--sub); font-size:.778em; line-height:1.7; }
+.fam-note{ margin-top:12px; }
+.say-list{ display:flex; flex-direction:column; gap:10px; }
+.say-btn{
+  display:block; width:100%; text-align:start;   /* start=LTRで左・RTL(ar)で右 */
+  background:var(--bg); color:var(--fg);
+  border:1px solid var(--line); border-radius:14px;
+  padding:12px 14px; min-height:44px;
+  font-size:.889em; line-height:1.7; font-family:inherit; cursor:pointer;
+}
+.card-src{
+  margin-top:14px; padding-top:10px; border-top:1px dashed var(--line);
+  display:flex; flex-direction:column; gap:10px;
+  color:var(--sub); font-size:.722em; line-height:1.7;
+}
+.src-item{ display:flex; flex-direction:column; gap:2px; align-items:flex-start; }
+.src-link{ color:var(--accent); text-decoration:underline; text-underline-offset:3px; word-break:break-all; padding:4px 0; }
+
 /* まどぐちカードの連絡先リンク */
 .contact{ margin-top:10px; display:flex; flex-direction:column; gap:8px; }
 .contact a{
@@ -247,7 +269,7 @@ body.fs2{ font-size:23px; }
 
 /* ---- 押下の手応え(.pressing) ---- ヘッダー名(ロゴ)には効かせない(痕跡を出さない) */
 .btn-exit.pressing,.btn-lang.pressing,.btn-primary.pressing,.btn-line.pressing,.btn-del.pressing,
-.tab.pressing,.oneline.pressing,.link-set.pressing,.tap-opt.pressing,.contact a.pressing{
+.tab.pressing,.oneline.pressing,.link-set.pressing,.tap-opt.pressing,.contact a.pressing,.say-btn.pressing{
   filter:brightness(1.15); transform:scale(.98);
 }
 

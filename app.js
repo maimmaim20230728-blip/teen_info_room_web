@@ -1,4 +1,5 @@
-/* 10代の情報室 / Teen Info Room v1.1(世界版=12言語 ja/en/de/fr/es/it/pt/nl/sv/ko/zh/ar)
+/* 10代の情報室 / Teen Info Room v1.6(世界版=12言語 ja/en/de/fr/es/it/pt/nl/sv/ko/zh/ar)
+   ・v1.6: しっておくの下に「障害のある家族がいるとき」(理由の例5・話すときの例2・勉強や物の工夫3)。例文はタップでコピー。
    ・家族の世話をしている子ども・若者(ヤングケアラー)本人が、夜にひとりで休める部屋。
    ・端末内(localStorage)のみ。送信・アカウント・分析なし(裁定・DESIGN_MEMO §5)。
    ・全ボタンは Tap.bind(clickは使わない)。ユーザー入力のDOM反映は textContent のみ(innerHTML禁止)。
@@ -267,6 +268,38 @@ const MADO = {
   ]
 };
 
+/* ③' 障害のある家族がいるとき(v1.6・しっておくの下)
+   文字は lang.js の family(12言語)。ここには出典の URL と ja の引用だけを持つ。
+   🔴 引用は 2026-09-28 に全件ページを開いて一字一句を照合済み(SOURCES_V1_6_FAMILY.md)。書き換えない。
+   ja 以外は引用を出さず「日本の公的資料」と明示した本文+発信元+リンク(日本語のページ)にする。 */
+const FAM_SRC = {
+  nise1:      { url:'https://cpedd.nise.go.jp/support/individual/bb62e3981b8ddd13b3f354da3cdef875/',
+                q:'身体の特定部位に触れられることを著しく嫌がる、一般的には不快に感じられない特定の音を嫌がるなどです。' },
+  rehab1:     { url:'https://www.rehab.go.jp/ddis/howto/info/',
+                q:'「猫舌」の人が熱い食べ物をがんばっても苦手なように、努力だけで克服することが困難な場合もあるので、無理強いは控えましょう。' },
+  mext14:     { url:'https://www.mext.go.jp/content/20230309-mxt_youji-000028051_14.pdf',
+                q:'想像力のつまずきにより、先を見通せない不安や急な予定の変更への不安が生じることがあります。' },
+  nise2:      { url:'https://cpedd.nise.go.jp/faqs/faq_questions/view/5235/4b089f52396ce0f021f4a56b4e46d80c?frame_id=4975',
+                q:'何をしてよいか分からない状況や混乱した状況、コミュニケーションがうまくいかない状況等の不安が強い状態でこだわりが強くなりがちです。' },
+  tokyoKyoiku:{ url:'https://www.kyoiku.metro.tokyo.lg.jp/documents/d/kyoiku/1_46',
+                q:'言葉でうまく伝えられなかったり、言葉以外でも周囲に気持ちが伝わる方法を知らなかったりする場合、周囲に伝えようとして自分なりの行動を取ります。' },
+  mext9:      { url:'https://www.mext.go.jp/content/20230309-mxt_youji-000028051_9.pdf',
+                q:'十分に指示等を理解していなくても、「はい」、「分かった」という返事をしてしまったりすることがあります。' },
+  ncnp:       { url:'https://kokoro.ncnp.go.jp/disease.php?%40uid=tQtLd1xVUp1wHJMQ',
+                q:'こうした幻覚や妄想は、本人にはまるで現実であるように感じられるので、病気が原因にあるとはなかなか気づくことができません。' },
+  hokkaido:   { url:'https://www.dokyoi.pref.hokkaido.lg.jp/hk/ssa/young-carer.html',
+                q:'学校に相談すると、地域のネットワークに直接連絡したり、スクールソーシャルワーカーを通じて必要な福祉サービスを受けられるよう調整したりすることができます。' },
+  cfa:        { url:'https://www.cfa.go.jp/assets/contents/node/basic_page/field_ref_resources/7692b729-5944-45ee-bbd8-f0283126b7db/def1acaf/20241101_policies_shougaijishien_shisaku_guideline_tebiki_06.pdf',
+                q:'また、「家族支援」は、対象を保護者に限った支援ではなく、きょうだいや祖父母等への支援も含まれる。' },
+  nerima:     { url:'https://www.city.nerima.tokyo.jp/hokenfukushi/shogai/oshirase/sibling.html', q:'' }
+};
+/* カードの並び(lang.js の family.<群>.cards と同じ順)ごとの出典 */
+const FAM_MAP = {
+  why:    [['nise1','rehab1'], ['mext14','nise2'], ['tokyoKyoiku'], ['mext9'], ['ncnp']],
+  talk:   [[], ['hokkaido']],
+  things: [[], [], ['cfa','nerima']]
+};
+
 /* ================= 画面切替(4タブ。メモはタブに置かない=アプリ名連打でだけ開く) ================= */
 const SCREENS = ['hitoiki', 'onaji', 'shitte', 'madoguchi'];
 let curScreen = 'hitoiki';
@@ -325,6 +358,79 @@ function buildShitte(){
     box.appendChild(card);
   });
 }
+/* ---- 障害のある家族がいるとき(v1.6) ---- */
+function famSrcBlock(ids){
+  const box = el('div', 'card-src');
+  ids.forEach(id => {
+    const s = FAM_SRC[id];
+    const item = el('div', 'src-item');
+    if(lang === 'ja' && s.q) item.appendChild(el('div', 'src-q', '「' + s.q + '」'));   // ja だけ一字一句の引用
+    const extra = T('family.srcLang');
+    item.appendChild(el('div', 'src-from', T('family.srcLabel') + T('family.src.' + id) + (extra ? ' ' + extra : '')));
+    let host = s.url;
+    try{ host = new URL(s.url).hostname; }catch(_){}
+    const a = el('a', 'src-link', host);
+    a.href = s.url; a.target = '_blank'; a.rel = 'noopener';   // 外部リンクは別タブ・rel=noopener
+    item.appendChild(a);
+    box.appendChild(item);
+  });
+  return box;
+}
+function buildFamily(){
+  const box = getEl('family-list');
+  if(!box) return;
+  box.textContent = '';
+  box.appendChild(el('h2', 'fam-head', T('family.head')));
+  ['why', 'talk', 'things'].forEach(g => {
+    const G = T('family.' + g);
+    box.appendChild(el('h3', 'fam-sub', G.title));
+    if(G.hint) box.appendChild(el('p', 'fam-hint', G.hint));
+    G.cards.forEach((c, i) => {
+      const card = el('div', 'card');
+      card.appendChild(el('div', 'card-title', c.title));
+      if(c.body) card.appendChild(el('div', 'card-body', c.body));
+      if(c.lines){
+        const list = el('div', 'say-list');
+        c.lines.forEach(s => {
+          const b = el('button', 'say-btn', s);
+          Tap.bind(b, () => copyText(s));
+          list.appendChild(b);
+        });
+        card.appendChild(list);
+      }
+      if(c.note) card.appendChild(el('div', 'card-body fam-note', c.note));
+      const ids = (FAM_MAP[g] && FAM_MAP[g][i]) || [];
+      if(ids.length) card.appendChild(famSrcBlock(ids));
+      box.appendChild(card);
+    });
+  });
+}
+/* 例文のコピー。出すのは「コピーしました」だけ(「メモに入れました」とは出さない=隠してあるメモの部屋が横の人に分かるため)。
+   navigator.clipboard が使えない/断られた端末は、見えない textarea + execCommand('copy') で試す */
+function legacyCopy(s){
+  try{
+    const ta = el('textarea');
+    ta.value = s;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand('copy');
+    ta.remove();
+    return !!ok;
+  }catch(_){ return false; }
+}
+function copyText(s){
+  const done = ok => toast(T(ok ? 'family.copied' : 'family.copyFail'));
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(s).then(() => done(true), () => done(legacyCopy(s)));
+      return;
+    }
+  }catch(_){}
+  done(legacyCopy(s));
+}
+
 function buildMadoguchi(){
   getEl('madoguchi-intro').textContent = T('madoIntro');
   const box = getEl('madoguchi-list');
@@ -517,7 +623,7 @@ function applyLang(){
   /* 静的ラベル([data-i18n])を一括反映 */
   document.querySelectorAll('[data-i18n]').forEach(n => { const v = T(n.dataset.i18n); if(typeof v === 'string') n.textContent = v; });
   /* 動的コンテンツ */
-  buildOnaji(); buildShitte(); buildMadoguchi();
+  buildOnaji(); buildShitte(); buildFamily(); buildMadoguchi();
   if(onelineIdx >= T('onelines').length) onelineIdx = 0;
   showOneline();
   setBreathText();

@@ -132,9 +132,10 @@ const documentStub = {
   querySelector(sel){ const m = /^#([A-Za-z0-9_-]+)$/.exec(String(sel).trim()); return m ? byId(m[1]) : makeEl(); },
   querySelectorAll(){ return []; }   // '#tabbar .tab' 等は空(showScreenは例外なく素通り)
 };
+const clip = [];   // v1.6 例文コピーの受け皿(navigator.clipboard スタブ)
 const sandbox = {
-  console, document:documentStub,
-  navigator:{ language:'ja-JP' },
+  console, document:documentStub, URL,
+  navigator:{ language:'ja-JP', clipboard:{ writeText(s){ clip.push(s); return { then(ok){ ok(); } }; } } },
   localStorage:localStorageStub,
   location:locationStub,
   scrollTo(){},
@@ -152,7 +153,8 @@ function check(name, cond){ if(cond) console.log('  OK  ' + name); else { consol
 /* ---- [条件1] 起動(script順=lang.js→audio.js→tap.js→app.js) ---- */
 /* Sound は audio.js の const(sandbox直下には現れない)。同じスクリプト内で window に退避して検査可能にする */
 const src = ['./lang.js', './audio.js', './tap.js', './app.js'].map(f => fs.readFileSync(f, 'utf8')).join('\n')
-  + '\n;try{ window.__Sound = Sound; }catch(e){}';
+  + '\n;try{ window.__Sound = Sound; }catch(e){}'
+  + '\n;try{ window.__FAM = { FAM_MAP: FAM_MAP, FAM_SRC: FAM_SRC }; }catch(e){}';
 vm.createContext(sandbox);
 try{
   vm.runInContext(src, sandbox, { filename:'app-bundle.js' });
@@ -457,6 +459,73 @@ check('🌐シートに12言語ボタン', li12.byId('lang-choices').children.fi
 check('ja ゴールデン(再): 一言[0]/しっておく[0]', KL.ja.onelines[0] === 'ゆっくりした呼吸には、心拍を落ちつかせる はたらきがあります。' && KL.ja.shitte[0].title === 'ヤングケアラーという言葉');
 check('en ゴールデン(再): oneline[0]/tab', KL.en.onelines[0] === 'Slow breathing is known to calm the heart rate.' && KL.en.tab.hitoiki === 'Breathe');
 sandbox.setLang('ja');
+
+/* ---- [v1.6 家族] しっておくの下「障害のある家族がいるとき」: 10カード・出典・例文コピー・12言語 ---- */
+console.log('[v1.6 家族] 障害のある家族がいるとき(理由の例5・話すときの例2・勉強や物の工夫3)');
+sandbox.setLang('ja');
+const famBox = byId('family-list');
+const famTxt = allText(famBox);
+const famCards = famBox.children.filter(c => c.className === 'card');
+check('家族: 見出し「障害のある家族がいるとき」と小見出し3つ',
+  famBox.children[0].textContent === '障害のある家族がいるとき' &&
+  famBox.children.filter(c => c.className === 'fam-sub').map(c => c.textContent).join('|') === 'どうしてそうなるの？（理由の例）|話すときの例|勉強や物の工夫');
+check('家族: カードは10枚(5+2+3)', famCards.length === 10);
+check('家族: しっておくの6カードはそのまま(別の箱)', byId('shitte-list').children.filter(c => c.className === 'card').length === 6);
+const sayBtns = collectTag(famBox, 'BUTTON').filter(b => b.className === 'say-btn');
+check('家族: 例文ボタンは8つ(友だち4・先生4)', sayBtns.length === 8);
+const famA = collectTag(famBox, 'A');
+check('家族: 出典リンクは10件・すべて https + 別タブ + noopener',
+  famA.length === 10 && famA.every(a => /^https:\/\//.test(a.href) && a.target === '_blank' && a.rel === 'noopener'));
+check('家族: 出典リンクの文字はドメイン名(cpedd.nise.go.jp など)', famA[0].textContent === 'cpedd.nise.go.jp' && famA.every(a => !/^https?:/.test(a.textContent)));
+check('家族: ja は一字一句の引用を出す(猫舌・幻覚や妄想・家族支援)',
+  famTxt.includes('「「猫舌」の人が熱い食べ物をがんばっても苦手なように、努力だけで克服することが困難な場合もあるので、無理強いは控えましょう。」') &&
+  famTxt.includes('こうした幻覚や妄想は、本人にはまるで現実であるように感じられるので') &&
+  famTxt.includes('きょうだいや祖父母等への支援も含まれる。'));
+check('家族: 出典の発信元(出典：国立特別支援教育総合研究所…)', famTxt.includes('出典：国立特別支援教育総合研究所 発達障害教育推進センター「感覚過敏に対する指導・支援」'));
+check('家族: FAM_MAP の出典idが全部 FAM_SRC と12言語の family.src にある',
+  !!sandbox.__FAM &&
+  [].concat(...Object.values(sandbox.__FAM.FAM_MAP).map(g => [].concat(...g))).every(id => sandbox.__FAM.FAM_SRC[id] && L12x().every(c => KLx()[c].family && KLx()[c].family.src[id])));
+function L12x(){ return ['ja','en','de','fr','es','it','pt','nl','sv','ko','zh','ar']; }
+function KLx(){ return sandbox.KYUKEI_LANG; }
+check('家族: 本文に「あなた」が無い(記事調)', !famTxt.includes('あなた'));
+check('家族: 画面に「メモ」の文字が無い(隠してあるメモの部屋を匂わせない)', !famTxt.includes('メモ'));
+/* 例文をタップ → その文だけがコピーされ「コピーしました」 */
+tap(sayBtns[0]);
+check('家族: 例文タップでその文がコピーされる', clip.length === 1 && clip[0] === '家のことで、放課後すぐ帰る日があるんだ。');
+check('家族: トーストは「コピーしました」', allText(byId('toast')).includes('コピーしました') && !allText(byId('toast')).includes('メモ'));
+tap(sayBtns[7]);
+check('家族: 先生への例文もコピーできる', clip[1] === '困ったときに相談できる人を、教えてください。');
+/* clipboard が無い端末: 例外にならず「コピーできませんでした」(疑似DOMでは execCommand が無い) */
+const nav0 = sandbox.navigator.clipboard;
+sandbox.navigator.clipboard = undefined;
+let noClipOk = true;
+try{ tap(sayBtns[1]); }catch(e){ noClipOk = false; }
+check('家族: clipboard が無くても例外にならず「コピーできませんでした」', noClipOk && allText(byId('toast')).includes('コピーできませんでした'));
+sandbox.navigator.clipboard = nav0;
+/* 他の言語: 10カード・例文8・出典10・日本語の引用は出さない・「(in Japanese)」相当が付く・enと違う訳 */
+let famFails = [];
+['en','de','fr','es','it','pt','nl','sv','ko','zh','ar'].forEach(c => {
+  try{
+    sandbox.setLang(c);
+    const b = byId('family-list');
+    const t = allText(b);
+    if(b.children.filter(x => x.className === 'card').length !== 10) famFails.push(c + ' cards');
+    if(collectTag(b, 'BUTTON').filter(x => x.className === 'say-btn').length !== 8) famFails.push(c + ' lines');
+    if(collectTag(b, 'A').length !== 10) famFails.push(c + ' links');
+    if(t.includes('猫舌') || t.includes('幻覚や妄想')) famFails.push(c + ' 日本語の引用が出ている');
+    if(!t.includes(KLx()[c].family.srcLang)) famFails.push(c + ' srcLang');
+    if(c !== 'en'){
+      ['why.cards[0].body', 'talk.cards[0].lines[0]', 'things.cards[2].body', 'head'].forEach(p => {
+        const get = o => p.split(/\.|\[|\]/).filter(Boolean).reduce((a, k) => (a == null ? a : a[k]), o);
+        if(get(KLx()[c].family) === get(KLx().en.family)) famFails.push(c + ' en残留 ' + p);
+      });
+    }
+  }catch(e){ famFails.push(c + ' EXC ' + e.message); }
+});
+check('家族: 11言語で10カード・例文8・出典10・引用は ja だけ・(in Japanese)相当・en残留なし', famFails.length === 0);
+if(famFails.length) console.log('    ' + famFails.join(' / '));
+sandbox.setLang('ja');
+check('家族: ja に戻すと日本語の見出しに戻る', byId('family-list').children[0].textContent === '障害のある家族がいるとき');
 
 /* ---- [v0.3 リロード] 同じ端末(store)で再起動: 案内は出ない・両オーバーレイは閉 ---- */
 console.log('[v0.3 リロード] introShown保持で案内が出ない・メモの部屋/せってい は閉');
