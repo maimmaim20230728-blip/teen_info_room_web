@@ -19,18 +19,25 @@ const Tap = (() => {
      pointerup で発火して画面が切り替わると、同じ指の あとから来る mousedown / mouseup / click が
      「新しい画面の同じ位置にある要素」に当たる(入力欄にキーボードが出る・下にあったリンクや電話番号が開く)。
      pointerup で発火したあと 700ms 以内・MOVE_LIMIT px 以内の mousedown / mouseup / click を document で捨てる(click を捨てたら終わり)。
-     pointer イベントは捨てないので、すぐ次のタップは今までどおり効く */
-  let ghost = null;
+     pointer イベントは捨てないので、すぐ次のタップは今までどおり効く
+     🔴 mousedown を捨てるとフォーカスも動かない: メモを書いている欄で Tap のボタンを押しても欄が選ばれたまま=キーボードが閉じない。
+     指が触れたときに選ばれていた欄が、まだ選ばれたままなら外す(捨てる前の mousedown と同じ)。押した処理が選んだ欄はそのまま */
+  let ghost = null, downFocus = null;
   function isGhost(e){
     if(!ghost) return false;
     if(Date.now() > ghost.until){ ghost = null; return false; }
     return Math.hypot((e.clientX || 0) - ghost.x, (e.clientY || 0) - ghost.y) <= MOVE_LIMIT;
   }
   if(typeof document !== 'undefined' && document.addEventListener){
+    document.addEventListener('pointerdown', () => { downFocus = document.activeElement; }, true);
     ['mousedown', 'mouseup', 'click'].forEach(type => document.addEventListener(type, e => {
       if(!isGhost(e)) return;
       e.preventDefault();
       e.stopPropagation();
+      if(type === 'mousedown'){
+        const a = document.activeElement;
+        if(a && a === downFocus && a !== e.target && (/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) || a.isContentEditable)){ try{ a.blur(); }catch(_){} }
+      }
       if(type === 'click') ghost = null;
     }, true));
   }
