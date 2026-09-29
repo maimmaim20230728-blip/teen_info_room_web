@@ -219,6 +219,12 @@ body.fs2{ font-size:23px; }
   max-height:calc(86vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));   /* 上下バーぶんを引く */
 }
 .sheet-title{ font-size:1em; font-weight:700; margin-bottom:14px; }
+/* アプリの中の確かめの窓(app.js askBox・Play版だけ・2026-09-30)。ほかの窓より上、トーストより下 */
+.overlay.ask-ov{ z-index:25; }
+.ask-box{ max-width:460px; }
+.ask-msg{ font-size:1em; font-weight:700; line-height:1.7; margin:0 0 18px; white-space:pre-wrap; overflow-wrap:anywhere; }
+.ask-row{ display:flex; flex-wrap:wrap; gap:10px; }
+.ask-row .btn-line{ flex:1 1 7em; min-height:52px; font-size:1em; }
 
 .memo-view-list{ display:flex; flex-direction:column; gap:12px; margin:16px 0 14px; }
 .memo-item{

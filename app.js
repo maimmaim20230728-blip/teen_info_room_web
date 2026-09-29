@@ -649,6 +649,87 @@ function quickExit(){
   location.replace(url);
 }
 
+/* ================= Android の戻るボタン(Play版だけ・2026-09-30) =================
+   @capacitor/app が無いと、戻るを押すとアプリごと後ろに下がっていた(Android 11 以前は閉じる)。
+   押したときの順: ①いちばん上に重ねた窓を、その窓の「とじる」と同じ動きで閉じる(下の窓は残る)
+                     ・せってい: 「× とじる」で ひらく ページを入れて ほぞんしていないときだけ、先に確かめる(いいえ=そのまま)
+                     ・メモの部屋: 書きかけは入れるたびに保存されている(v0.5)ので、確かめずに閉じる。「けす?」の途中でも消さない
+                     ・初回の案内: 「わかった」でしか閉じない(閉じると二度と出ない)ので、閉じずに④と同じ
+                  ②ひといき以外のタブ → ひといき(下タブの いちばん左)
+                  ③ひといき → アプリを後ろに下げる(minimizeApp。中身はそのまま)
+   🔴 プラグインはネイティブが注入する Capacitor.Plugins.App を使う(registerPlugin は WebView に無い)。
+   Web版(ブラウザ)は何も変えない(戻るはブラウザのまま) */
+function isNativeApp(){
+  try{ const c = window.Capacitor; return !!(c && typeof c.isNativePlatform === 'function' && c.isNativePlatform()); }catch(_){ return false; }
+}
+function nativePlugin(name, fn){
+  try{
+    const c = window.Capacitor;
+    if(typeof c.isPluginAvailable === 'function' && !c.isPluginAvailable(name)) return null;
+    const p = c.Plugins && c.Plugins[name];
+    return (p && typeof p[fn] === 'function') ? p : null;
+  }catch(_){ return null; }
+}
+function minimizeApp(){
+  const ap = nativePlugin('App', 'minimizeApp');
+  try{ if(ap){ const p = ap.minimizeApp(); if(p && p.catch) p.catch(() => {}); } }catch(_){}
+}
+/* ---- アプリの中の確かめの窓(Play版だけ・2026-09-30) ----
+   Play版の window.confirm は、Capacitor がボタンを英語の OK / Cancel に決め打ちしている。
+   Play版だけ、アプリの中に「いいえ / はい」(lang.js の askNo / askYes・12言語)の窓を出す。Web版は window.confirm。
+   done(true=はい / false=いいえ)。戻るボタン=いいえ */
+let askOpen = null;
+function askBox(msg, done){
+  if(!isNativeApp()){
+    let r = false;
+    try{ if(typeof window.confirm === 'function') r = !!window.confirm(msg); }catch(_){ r = false; }
+    done(r);
+    return;
+  }
+  const ov = el('div', 'overlay ask-ov');
+  ov.setAttribute('role', 'alertdialog');
+  ov.setAttribute('aria-modal', 'true');
+  const box = el('div', 'sheet-box ask-box');
+  const row = el('div', 'ask-row');
+  const no = el('button', 'btn-line ask-no', T('askNo'));
+  const yes = el('button', 'btn-line ask-yes', T('askYes'));
+  no.type = 'button'; yes.type = 'button';
+  let closed = false;
+  function close(v){ if(closed) return; closed = true; askOpen = null; ov.remove(); done(v); }
+  Tap.bind(no, () => close(false));
+  Tap.bind(yes, () => close(true));
+  row.appendChild(no); row.appendChild(yes);
+  box.appendChild(el('p', 'ask-msg', msg)); box.appendChild(row); ov.appendChild(box);
+  askOpen = () => close(false);
+  document.body.appendChild(ov);
+  try{ no.focus(); }catch(_){}
+}
+function isOpen(id){ const e = getEl(id); return !!e && !e.classList.contains('hidden'); }
+/* せっていの「× とじる」で ひらく ページを、入れたまま ほぞんしていないか(ほぞんと同じ決まりで比べる) */
+function exitUnsaved(){
+  const v = (getEl('set-exit').value || '').trim() || EXIT_DEFAULT;
+  return v !== ((prefs.exitUrl && prefs.exitUrl.trim()) || EXIT_DEFAULT);
+}
+function onBackButton(){
+  if(askOpen){ askOpen(); return; }                       // 確かめの窓=いいえ
+  if(isOpen('intro')){ minimizeApp(); return; }           // 初回の案内は「わかった」でしか閉じない
+  if(isOpen('settings')){
+    if(exitUnsaved()){ askBox(T('askUnsaved'), ok => { if(ok) closeSettings(); }); return; }
+    closeSettings(); return;
+  }
+  if(isOpen('looks')){ closeLooks(); return; }
+  if(isOpen('lang-sheet')){ closeLangSheet(); return; }
+  if(isOpen('memo-view')){ closeMemoView(); return; }
+  if(curScreen !== 'hitoiki'){ showScreen('hitoiki'); return; }
+  minimizeApp();
+}
+function watchBack(){
+  if(!isNativeApp()) return;
+  const ap = nativePlugin('App', 'addListener');
+  if(!ap) return;
+  try{ ap.addListener('backButton', () => { onBackButton(); }); }catch(_){}
+}
+
 /* ================= 起動 ================= */
 function init(){
   /* ヘッダー名(ロゴ)。ここを連打すると メモの部屋が開く(痕跡は出さない=.pressing無しでCSS上も無反応)。
@@ -709,6 +790,8 @@ function init(){
   Sound.setBgmEnabled(prefs.bgm);
 
   showScreen('hitoiki');
+
+  watchBack();   /* Android の戻るボタン(Play版だけ) */
 
   /* 下タブの実寸を余白へ反映(セーフエリア対応)。以後は箱の大きさが変わるたびに測り直す */
   applyBarSpace();
