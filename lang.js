@@ -162,7 +162,7 @@ window.KYUKEI_LANG = {
     fsXL: 'とくだい',
     privacyNote: '記録はこの端末の中だけ。どこにも送信されません',
     credit: 'アプリ開発：介護と支援の相談どころ　そよぎ',
-    version: 'バージョン 1.8',
+    version: 'バージョン 1.9',
 
     introOk: 'わかった',
     intro: 'この部屋には、かくれた機能があります。\nいちばん上の「{name}」の名前を {n}回 つづけてタップすると、\nメモと せっていの部屋が ひらきます。\nこの案内は、もう二度と表示されません。'
@@ -324,7 +324,7 @@ window.KYUKEI_LANG = {
     fsXL: 'Extra large',
     privacyNote: 'Everything stays on this device. Nothing is ever sent anywhere.',
     credit: 'App development: SOYOGI - Care & Support Consultation',
-    version: 'Version 1.8',
+    version: 'Version 1.9',
 
     introOk: 'Got it',
     intro: 'This room has a hidden feature.\nTap the name "{name}" at the top {n} times in a row\nto open the Memo Room and Settings.\nThis notice will never be shown again.'
@@ -474,7 +474,7 @@ window.KYUKEI_LANG = {
     fsXL: "Sehr groß",
     privacyNote: "Alles bleibt auf diesem Gerät. Nichts wird jemals irgendwohin gesendet.",
     credit: "App-Entwicklung: SOYOGI - Beratungsstelle für Pflege und Unterstützung",
-    version: "Version 1.8",
+    version: "Version 1.9",
     introOk: "Verstanden",
     intro: "Dieses Zimmer hat eine verborgene Funktion.\nOben den Namen „{name}\" {n} Mal hintereinander antippen,\ndann öffnen sich Memozimmer und Einstellungen.\nDieser Hinweis wird nie wieder angezeigt."
   },
@@ -623,7 +623,7 @@ window.KYUKEI_LANG = {
     fsXL: "Très grande",
     privacyNote: "Tout reste sur cet appareil. Rien n'est jamais envoyé nulle part.",
     credit: "Développement de l'application : SOYOGI - Lieu de conseil en soins et soutien",
-    version: "Version 1.8",
+    version: "Version 1.9",
     introOk: "Compris",
     intro: "Cette pièce a une fonction cachée.\nToucher le nom « {name} » en haut {n} fois d'affilée\nouvre la pièce aux mémos et les réglages.\nCe message ne s'affichera plus jamais."
   },
@@ -772,7 +772,7 @@ window.KYUKEI_LANG = {
     fsXL: "Muy grande",
     privacyNote: "Todo se queda en este dispositivo. Nunca se envía nada a ninguna parte.",
     credit: "Desarrollo de la aplicación: SOYOGI - Centro de consultas de cuidados y apoyo",
-    version: "Versión 1.8",
+    version: "Versión 1.9",
     introOk: "Entendido",
     intro: "Este cuarto tiene una función oculta.\nTocar el nombre \"{name}\" de arriba {n} veces seguidas\nabre el cuarto de las notas y los ajustes.\nEste aviso no volverá a mostrarse nunca."
   },
@@ -921,7 +921,7 @@ window.KYUKEI_LANG = {
     fsXL: "Molto grande",
     privacyNote: "Tutto resta su questo dispositivo. Niente viene mai inviato da nessuna parte.",
     credit: "Sviluppo dell'app: SOYOGI - Sportello di consulenza per cura e sostegno",
-    version: "Versione 1.8",
+    version: "Versione 1.9",
     introOk: "Capito",
     intro: "Questa stanza ha una funzione nascosta.\nToccare il nome \"{name}\" in alto {n} volte di fila\napre la stanza degli appunti e le impostazioni.\nQuesto avviso non verrà mai più mostrato."
   },
@@ -1070,7 +1070,7 @@ window.KYUKEI_LANG = {
     fsXL: "Muito grande",
     privacyNote: "Tudo fica neste aparelho. Nada é enviado para lugar nenhum.",
     credit: "Desenvolvimento do app: SOYOGI - Centro de consultas de cuidado e apoio",
-    version: "Versão 1.8",
+    version: "Versão 1.9",
     introOk: "Entendi",
     intro: "Este quarto tem uma função escondida.\nTocar o nome \"{name}\" lá em cima {n} vezes seguidas\nabre o quarto das notas e as configurações.\nEste aviso nunca mais será mostrado."
   },
@@ -1219,7 +1219,7 @@ window.KYUKEI_LANG = {
     fsXL: "Extra groot",
     privacyNote: "Alles blijft op dit apparaat. Er wordt nooit iets ergens naartoe gestuurd.",
     credit: "App-ontwikkeling: SOYOGI - Adviespunt voor zorg en ondersteuning",
-    version: "Versie 1.8",
+    version: "Versie 1.9",
     introOk: "Begrepen",
     intro: "Deze kamer heeft een verborgen functie.\nTik {n} keer achter elkaar op de naam \"{name}\" bovenaan,\ndan openen de memokamer en de instellingen.\nDeze melding wordt nooit meer getoond."
   },
@@ -1368,7 +1368,7 @@ window.KYUKEI_LANG = {
     fsXL: "Extra stor",
     privacyNote: "Allt stannar på den här enheten. Ingenting skickas någonsin någonstans.",
     credit: "Apputveckling: SOYOGI - Rådgivning för omsorg och stöd",
-    version: "Version 1.8",
+    version: "Version 1.9",
     introOk: "Förstått",
     intro: "Det här rummet har en dold funktion.\nTryck på namnet \"{name}\" högst upp {n} gånger i rad,\nså öppnas anteckningsrummet och inställningarna.\nDet här meddelandet visas aldrig igen."
   },
@@ -1517,7 +1517,7 @@ window.KYUKEI_LANG = {
     fsXL: "아주 크게",
     privacyNote: "기록은 이 기기 안에만 있습니다. 어디에도 전송되지 않습니다.",
     credit: "앱 개발: SOYOGI - 돌봄과 지원 상담소",
-    version: "버전 1.8",
+    version: "버전 1.9",
     introOk: "알겠어요",
     intro: "이 방에는 숨겨진 기능이 있습니다.\n맨 위의 \"{name}\" 이름을 {n}번 연달아 탭하면\n메모의 방과 설정이 열립니다.\n이 안내는 두 번 다시 표시되지 않습니다."
   },
@@ -1666,7 +1666,7 @@ window.KYUKEI_LANG = {
     fsXL: "特大",
     privacyNote: "记录只保存在这台设备里,不会发送到任何地方。",
     credit: "应用开发: SOYOGI - 照护与支援咨询处",
-    version: "版本 1.8",
+    version: "版本 1.9",
     introOk: "知道了",
     intro: "这个房间有一个隐藏功能。\n连续点按最上方的名字\"{name}\" {n}次,\n便签的房间和设置就会打开。\n这条提示不会再次显示。"
   },
@@ -1815,7 +1815,7 @@ window.KYUKEI_LANG = {
     fsXL: "كبير جدًا",
     privacyNote: "كل شيء يبقى على هذا الجهاز. لا يُرسل أي شيء إلى أي مكان أبدًا.",
     credit: "تطوير التطبيق: SOYOGI - مركز استشارات الرعاية والدعم",
-    version: "الإصدار 1.8",
+    version: "الإصدار 1.9",
     introOk: "فهمت",
     intro: "لهذه الغرفة خاصية مخفية.\nانقر على الاسم «{name}» في الأعلى {n} مرات متتالية\nفتُفتح غرفة المذكرات والإعدادات.\nلن يظهر هذا التنبيه مرة أخرى أبدًا."
   }
