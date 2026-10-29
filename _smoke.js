@@ -213,10 +213,10 @@ check('呼吸フェーズに「すって…」が入る', byId('breath-phase').t
 /* カード表示(v0.6 データ4カード・記事調が出ているか) */
 const onajiTxt = allText(byId('onaji-list'));
 check('データ: 4カード(学年別/毎日数時間/だれにも話していない/ひとりの時間)', byId('onaji-list').children.filter(c => c.className === 'card').length === 4);
-/* 2026-10-30: 中2は 5.7% → 100÷5.7=17.5 なので「約18人に1人」(前は約17) */
-check('データ: 学年別の3つの「約N人に1人」(小6約15/中2約18/高2約24)が出る',
+/* 中2は「約17人に1人」= こども家庭庁のヤングケアラー特設サイトの書き方のまま(2026-10-30 確認・計算の 17.5 で 18 にしない) */
+check('データ: 学年別の3つの「約N人に1人」(小6約15/中2約17/高2約24)が出る',
   onajiTxt.includes('小学6年生で 約15人に1人（6.5%）') &&
-  onajiTxt.includes('中学2年生で 約18人に1人（5.7%）') &&
+  onajiTxt.includes('中学2年生で 約17人に1人（5.7%）') &&
   onajiTxt.includes('全日制高校2年生で 約24人に1人（4.1%）'));
 check('データ: 「毎日、数時間」カード(ほぼ毎日・平均1日3〜4時間)が出る',
   onajiTxt.includes('「ほぼ毎日」がいちばん多く、およそ半数') && onajiTxt.includes('平均で1日3〜4時間と報告されています'));
@@ -376,7 +376,7 @@ check('en: 一言[0]', byId('oneline').textContent === 'Slow breathing is known 
 check('en: 呼吸フェーズ = Breathe in…', byId('breath-phase').textContent === 'Breathe in…');
 const enOnaji = allText(byId('onaji-list'));
 check('en データ: 5カード(Around the worldを含む)', byId('onaji-list').children.filter(c => c.className === 'card').length === 5 && enOnaji.includes('Around the world') && enOnaji.includes('Young carers exist in every country'));
-check('en データ: 学年別(1 in 15/18/24)+国際数値', enOnaji.includes('about 1 in 15 sixth graders (6.5%)') && enOnaji.includes('about 1 in 18') && enOnaji.includes('about 1 in 24') && enOnaji.includes('about 120,000 young carers'));
+check('en データ: 学年別(1 in 15/17/24)+国際数値', enOnaji.includes('about 1 in 15 sixth graders (6.5%)') && enOnaji.includes('about 1 in 17') && enOnaji.includes('about 1 in 24') && enOnaji.includes('about 120,000 young carers'));
 check('en データ: 出典注記(Japan\'s national surveys)', enOnaji.includes('Figures are based on Japan'));
 const enShitte = allText(byId('shitte-list'));
 check('en しっておく: 6カード', byId('shitte-list').children.filter(c => c.className === 'card').length === 6 && enShitte.includes('are called "young carers."') && enShitte.includes('one way to protect both the young person and the family'));

@@ -96,7 +96,7 @@ function clearDraft(){ try{ localStorage.removeItem(LS_DRAFT); }catch(e){} }
 const ONAJI = {
   ja: [
     { title:'学年別のデータ',
-      body:'家族の世話をしている10代の割合は、国の調査でこう報告されています。小学6年生で 約15人に1人（6.5%）。中学2年生で 約18人に1人（5.7%）。全日制高校2年生で 約24人に1人（4.1%）。どの学年でも、1クラスに1〜2人いる計算になります。' },
+      body:'家族の世話をしている10代の割合は、国の調査でこう報告されています。小学6年生で 約15人に1人（6.5%）。中学2年生で 約17人に1人（5.7%）。全日制高校2年生で 約24人に1人（4.1%）。どの学年でも、1クラスに1〜2人いる計算になります。' },
     { title:'毎日、数時間',
       body:'世話の頻度は「ほぼ毎日」がいちばん多く、およそ半数にのぼります。平日に世話へ使う時間は、平均で1日3〜4時間と報告されています。宿題や部活、睡眠と重なる長さです。' },
     { title:'半分以上が、だれにも話していない',
@@ -106,7 +106,7 @@ const ONAJI = {
   ],
   en: [
     { title:'Data by school year (Japan)',
-      body:"In Japan's national surveys, about 1 in 15 sixth graders (6.5%), about 1 in 18 second-year junior high school students (5.7%), and about 1 in 24 second-year high school students (4.1%) reported caring for a family member. That is one or two students in every classroom." },
+      body:"In Japan's national surveys, about 1 in 15 sixth graders (6.5%), about 1 in 17 second-year junior high school students (5.7%), and about 1 in 24 second-year high school students (4.1%) reported caring for a family member. That is one or two students in every classroom." },
     { title:'Every day, for hours',
       body:'In the same surveys, about half of these students helped their family almost every day. On weekdays, care took an average of 3 to 4 hours a day. Those are hours that overlap with homework, clubs, and sleep.' },
     { title:'More than half have told no one',
@@ -117,70 +117,70 @@ const ONAJI = {
       body:'Reading, listening to music, breathing slowly. Young people in this situation often say that quiet time alone helped them keep going.' }
   ],
   de: [
-    { title: "Zahlen aus Japan (nach Klassenstufe)", body: "In Japans landesweiten Befragungen gab etwa 1 von 15 Sechstklässlern (6,5%), 1 von 18 Schülern der 8. Klasse (5,7%) und 1 von 24 Schülern der 11. Klasse (4,1%) an, ein Familienmitglied zu versorgen. Das sind ein bis zwei in jeder Klasse." },
+    { title: "Zahlen aus Japan (nach Klassenstufe)", body: "In Japans landesweiten Befragungen gab etwa 1 von 15 Sechstklässlern (6,5%), 1 von 17 Schülern der 8. Klasse (5,7%) und 1 von 24 Schülern der 11. Klasse (4,1%) an, ein Familienmitglied zu versorgen. Das sind ein bis zwei in jeder Klasse." },
     { title: "Jeden Tag, stundenlang", body: "Etwa die Hälfte dieser Schüler hilft fast täglich. An Schultagen dauert die Sorge im Schnitt 3 bis 4 Stunden am Tag. Diese Stunden überschneiden sich mit Hausaufgaben, Hobbys und Schlaf." },
     { title: "Mehr als die Hälfte hat es niemandem erzählt", body: "In Befragungen japanischer Schüler hatte mehr als die Hälfte noch nie mit jemandem über ihre Aufgaben zu Hause gesprochen. „Ich glaube nicht, dass andere das verstehen würden\" war ein häufiger Grund." },
     { title: "Rund um die Welt", body: "Junge Pflegende gibt es in jedem Land. In England zählte der Zensus 2021 etwa 120.000 junge Pflegende zwischen 5 und 17 Jahren - und das Statistikamt selbst sagt, die wahre Zahl liege wohl höher. In Deutschland ergab eine bundesweite Befragung, dass etwa 5% der 12- bis 17-Jährigen regelmäßig bei der Versorgung eines Familienmitglieds helfen. In der Schweiz fand eine große Schulstudie 7,9%. In den USA deuten nationale Zeitverwendungsdaten darauf hin, dass fast 1 von 10 Jugendlichen zwischen 15 und 18 einen Erwachsenen mitversorgt. Und in vielen Ländern hat noch niemand gezählt." },
     { title: "Die Rolle der Zeit für sich", body: "Lesen, Musik hören, langsam atmen. Junge Menschen in dieser Lage sagen oft, dass ruhige Zeit für sich allein ihnen geholfen hat, weiterzumachen." }
   ],
   fr: [
-    { title: "Chiffres du Japon (par niveau scolaire)", body: "Dans les enquêtes nationales du Japon, environ 1 élève de sixième année sur 15 (6,5%), 1 collégien de deuxième année sur 18 (5,7%) et 1 lycéen de deuxième année sur 24 (4,1%) déclarent s'occuper d'un membre de leur famille. Cela fait un ou deux élèves par classe." },
+    { title: "Chiffres du Japon (par niveau scolaire)", body: "Dans les enquêtes nationales du Japon, environ 1 élève de sixième année sur 15 (6,5%), 1 collégien de deuxième année sur 17 (5,7%) et 1 lycéen de deuxième année sur 24 (4,1%) déclarent s'occuper d'un membre de leur famille. Cela fait un ou deux élèves par classe." },
     { title: "Chaque jour, pendant des heures", body: "Environ la moitié de ces élèves aident leur famille presque tous les jours. En semaine, cela prend en moyenne 3 à 4 heures par jour. Des heures qui se superposent aux devoirs, aux loisirs et au sommeil." },
     { title: "Plus de la moitié n'en ont parlé à personne", body: "Dans les enquêtes menées auprès de collégiens et lycéens japonais, plus de la moitié n'avaient jamais parlé à personne de leur rôle. « Je ne pense pas qu'on me comprendrait » revenait souvent comme raison." },
     { title: "Autour du monde", body: "Les jeunes aidants existent dans tous les pays. En Angleterre, le recensement de 2021 a compté environ 120 000 jeunes aidants de 5 à 17 ans - et l'office des statistiques dit lui-même que le vrai chiffre est sans doute plus élevé. En Allemagne, une enquête nationale a montré qu'environ 5% des 12-17 ans aident régulièrement à s'occuper d'un proche. En Suisse, une grande étude scolaire a trouvé 7,9%. Aux États-Unis, les données nationales d'emploi du temps suggèrent que près d'un jeune de 15 à 18 ans sur 10 aide à s'occuper d'un adulte. Et dans beaucoup de pays, personne n'a encore compté." },
     { title: "Le rôle du temps pour soi", body: "Lire, écouter de la musique, respirer lentement. Les jeunes dans cette situation disent souvent que des moments calmes, seuls, les ont aidés à tenir." }
   ],
   es: [
-    { title: "Datos de Japón (por curso escolar)", body: "En las encuestas nacionales de Japón, alrededor de 1 de cada 15 alumnos de sexto de primaria (6,5%), 1 de cada 18 de segundo de secundaria (5,7%) y 1 de cada 24 de segundo de bachillerato (4,1%) declararon cuidar de un familiar. Eso es uno o dos alumnos por clase." },
+    { title: "Datos de Japón (por curso escolar)", body: "En las encuestas nacionales de Japón, alrededor de 1 de cada 15 alumnos de sexto de primaria (6,5%), 1 de cada 17 de segundo de secundaria (5,7%) y 1 de cada 24 de segundo de bachillerato (4,1%) declararon cuidar de un familiar. Eso es uno o dos alumnos por clase." },
     { title: "Cada día, durante horas", body: "Alrededor de la mitad de estos alumnos ayudan a su familia casi todos los días. Entre semana, el cuidado ocupa una media de 3 a 4 horas al día. Horas que se solapan con los deberes, las aficiones y el sueño." },
     { title: "Más de la mitad no se lo ha contado a nadie", body: "En las encuestas a estudiantes japoneses de secundaria y bachillerato, más de la mitad nunca había hablado con nadie de su papel. \"No creo que me entiendan\" era una razón frecuente." },
     { title: "Alrededor del mundo", body: "Los jóvenes cuidadores existen en todos los países. En Inglaterra, el censo de 2021 contó unos 120.000 jóvenes cuidadores de 5 a 17 años, y la propia oficina de estadística dice que la cifra real es probablemente mayor. En Alemania, una encuesta nacional halló que alrededor del 5% de los jóvenes de 12 a 17 años ayudan con regularidad a cuidar de un familiar. En Suiza, un gran estudio escolar encontró un 7,9%. En Estados Unidos, los datos nacionales de uso del tiempo sugieren que casi 1 de cada 10 jóvenes de 15 a 18 años ayuda a cuidar de un adulto. Y en muchos países, nadie ha contado todavía." },
     { title: "El papel del tiempo a solas", body: "Leer, escuchar música, respirar despacio. Los jóvenes en esta situación cuentan a menudo que el tiempo tranquilo a solas les ayudó a seguir adelante." }
   ],
   it: [
-    { title: "Dati dal Giappone (per anno scolastico)", body: "Nelle indagini nazionali giapponesi, circa 1 alunno di quinta elementare su 15 (6,5%), 1 studente di seconda media su 18 (5,7%) e 1 studente del secondo anno di superiori su 24 (4,1%) dichiara di prendersi cura di un familiare. Cioè uno o due studenti per classe." },
+    { title: "Dati dal Giappone (per anno scolastico)", body: "Nelle indagini nazionali giapponesi, circa 1 alunno di quinta elementare su 15 (6,5%), 1 studente di seconda media su 17 (5,7%) e 1 studente del secondo anno di superiori su 24 (4,1%) dichiara di prendersi cura di un familiare. Cioè uno o due studenti per classe." },
     { title: "Ogni giorno, per ore", body: "Circa la metà di questi studenti aiuta la famiglia quasi ogni giorno. Nei giorni di scuola, la cura richiede in media dalle 3 alle 4 ore al giorno. Ore che si sovrappongono a compiti, passioni e sonno." },
     { title: "Più della metà non l'ha detto a nessuno", body: "Nelle indagini su studenti giapponesi di medie e superiori, più della metà non aveva mai parlato con nessuno del proprio ruolo. \"Non credo che capirebbero\" era un motivo frequente." },
     { title: "Nel mondo", body: "I giovani caregiver esistono in ogni paese. In Inghilterra, il censimento del 2021 ha contato circa 120.000 giovani caregiver tra i 5 e i 17 anni - e lo stesso istituto di statistica dice che il numero vero è probabilmente più alto. In Germania, un'indagine nazionale ha rilevato che circa il 5% dei ragazzi tra i 12 e i 17 anni aiuta regolarmente ad assistere un familiare. In Svizzera, un grande studio nelle scuole ha trovato il 7,9%. Negli Stati Uniti, i dati nazionali sull'uso del tempo suggeriscono che quasi 1 giovane su 10 tra i 15 e i 18 anni aiuta ad assistere un adulto. E in molti paesi, nessuno ha ancora contato." },
     { title: "Il ruolo del tempo per sé", body: "Leggere, ascoltare musica, respirare piano. I giovani in questa situazione raccontano spesso che il tempo tranquillo da soli li ha aiutati ad andare avanti." }
   ],
   pt: [
-    { title: "Dados do Japão (por ano escolar)", body: "Nas pesquisas nacionais do Japão, cerca de 1 em cada 15 alunos do sexto ano (6,5%), 1 em cada 18 do segundo ano do fundamental II (5,7%) e 1 em cada 24 do segundo ano do ensino médio (4,1%) relataram cuidar de um familiar. Isso dá um ou dois alunos por turma." },
+    { title: "Dados do Japão (por ano escolar)", body: "Nas pesquisas nacionais do Japão, cerca de 1 em cada 15 alunos do sexto ano (6,5%), 1 em cada 17 do segundo ano do fundamental II (5,7%) e 1 em cada 24 do segundo ano do ensino médio (4,1%) relataram cuidar de um familiar. Isso dá um ou dois alunos por turma." },
     { title: "Todos os dias, por horas", body: "Cerca de metade desses alunos ajuda a família quase todos os dias. Em dias de semana, o cuidado leva em média de 3 a 4 horas por dia. Horas que se sobrepõem ao dever de casa, aos hobbies e ao sono." },
     { title: "Mais da metade não contou a ninguém", body: "Nas pesquisas com estudantes japoneses, mais da metade nunca tinha falado com ninguém sobre seu papel. \"Acho que não iam entender\" era um motivo comum." },
     { title: "Pelo mundo", body: "Jovens cuidadores existem em todos os países. Na Inglaterra, o censo de 2021 contou cerca de 120.000 jovens cuidadores de 5 a 17 anos - e o próprio órgão de estatística diz que o número real deve ser maior. Na Alemanha, uma pesquisa nacional mostrou que cerca de 5% dos jovens de 12 a 17 anos ajudam regularmente a cuidar de um familiar. Na Suíça, um grande estudo escolar encontrou 7,9%. Nos Estados Unidos, dados nacionais de uso do tempo sugerem que quase 1 em cada 10 jovens de 15 a 18 anos ajuda a cuidar de um adulto. E em muitos países, ninguém contou ainda." },
     { title: "O papel do tempo sozinho", body: "Ler, ouvir música, respirar devagar. Jovens nessa situação contam muitas vezes que o tempo tranquilo sozinhos os ajudou a seguir em frente." }
   ],
   nl: [
-    { title: "Cijfers uit Japan (per leerjaar)", body: "In de landelijke onderzoeken van Japan gaf ongeveer 1 op de 15 leerlingen van groep 8 (6,5%), 1 op de 18 tweedejaars van de onderbouw (5,7%) en 1 op de 24 tweedejaars van de bovenbouw (4,1%) aan voor een familielid te zorgen. Dat zijn er één of twee in elke klas." },
+    { title: "Cijfers uit Japan (per leerjaar)", body: "In de landelijke onderzoeken van Japan gaf ongeveer 1 op de 15 leerlingen van groep 8 (6,5%), 1 op de 17 tweedejaars van de onderbouw (5,7%) en 1 op de 24 tweedejaars van de bovenbouw (4,1%) aan voor een familielid te zorgen. Dat zijn er één of twee in elke klas." },
     { title: "Elke dag, urenlang", body: "Ongeveer de helft van deze leerlingen helpt bijna elke dag. Op schooldagen kost de zorg gemiddeld 3 tot 4 uur per dag. Uren die overlappen met huiswerk, hobby's en slaap." },
     { title: "Meer dan de helft heeft het niemand verteld", body: "In onderzoeken onder Japanse scholieren had meer dan de helft er nog nooit met iemand over gesproken. \"Ik denk niet dat ze het zouden begrijpen\" was een veelgenoemde reden." },
     { title: "Over de hele wereld", body: "Jonge mantelzorgers zijn er in elk land. In Engeland telde de volkstelling van 2021 ongeveer 120.000 jonge mantelzorgers van 5 tot 17 jaar - en het statistiekbureau zegt zelf dat het echte aantal waarschijnlijk hoger ligt. In Duitsland bleek uit een landelijk onderzoek dat ongeveer 5% van de 12- tot 17-jarigen regelmatig meehelpt bij de zorg voor een familielid. In Zwitserland vond een groot schoolonderzoek 7,9%. In de Verenigde Staten wijzen nationale tijdsbestedingsgegevens erop dat bijna 1 op de 10 jongeren van 15 tot 18 jaar meezorgt voor een volwassene. En in veel landen heeft nog niemand geteld." },
     { title: "De rol van tijd voor jezelf", body: "Lezen, muziek luisteren, langzaam ademen. Jongeren in deze situatie vertellen vaak dat rustige tijd alleen hen hielp om door te gaan." }
   ],
   sv: [
-    { title: "Siffror från Japan (per årskurs)", body: "I Japans nationella undersökningar uppgav ungefär 1 av 15 elever i årskurs 6 (6,5%), 1 av 18 i åttonde klass (5,7%) och 1 av 24 andraårselever på gymnasiet (4,1%) att de tar hand om en familjemedlem. Det är en eller två elever i varje klass." },
+    { title: "Siffror från Japan (per årskurs)", body: "I Japans nationella undersökningar uppgav ungefär 1 av 15 elever i årskurs 6 (6,5%), 1 av 17 i åttonde klass (5,7%) och 1 av 24 andraårselever på gymnasiet (4,1%) att de tar hand om en familjemedlem. Det är en eller två elever i varje klass." },
     { title: "Varje dag, i timmar", body: "Ungefär hälften av dessa elever hjälper sin familj nästan varje dag. På vardagar tar omsorgen i snitt 3 till 4 timmar om dagen. Timmar som krockar med läxor, fritid och sömn." },
     { title: "Mer än hälften har inte berättat för någon", body: "I undersökningar bland japanska högstadie- och gymnasieelever hade mer än hälften aldrig pratat med någon om sin roll. \"Jag tror inte att de skulle förstå\" var ett vanligt skäl." },
     { title: "Runt om i världen", body: "Unga omsorgsgivare finns i alla länder. I England räknade folkräkningen 2021 till ungefär 120 000 unga omsorgsgivare mellan 5 och 17 år - och statistikmyndigheten säger själv att den verkliga siffran troligen är högre. I Tyskland visade en nationell undersökning att ungefär 5% av 12- till 17-åringarna regelbundet hjälper till att ta hand om en familjemedlem. I Schweiz fann en stor skolstudie 7,9%. I USA tyder nationella tidsanvändningsdata på att nästan 1 av 10 unga mellan 15 och 18 år hjälper till att ta hand om en vuxen. Och i många länder har ingen räknat ännu." },
     { title: "Egentidens roll", body: "Läsa, lyssna på musik, andas långsamt. Unga i den här situationen berättar ofta att lugn tid för sig själva hjälpte dem att orka vidare." }
   ],
   ko: [
-    { title: "일본의 데이터 (학년별)", body: "일본의 전국 조사에서는 초등학교 6학년의 약 15명 중 1명(6.5%), 중학교 2학년의 약 18명 중 1명(5.7%), 고등학교 2학년의 약 24명 중 1명(4.1%)이 가족을 돌보고 있다고 답했습니다. 어느 학년이든 한 반에 한두 명 있는 셈입니다." },
+    { title: "일본의 데이터 (학년별)", body: "일본의 전국 조사에서는 초등학교 6학년의 약 15명 중 1명(6.5%), 중학교 2학년의 약 17명 중 1명(5.7%), 고등학교 2학년의 약 24명 중 1명(4.1%)이 가족을 돌보고 있다고 답했습니다. 어느 학년이든 한 반에 한두 명 있는 셈입니다." },
     { title: "매일, 몇 시간씩", body: "같은 조사에서 이 학생들의 약 절반이 거의 매일 가족을 돕고 있었습니다. 평일에 돌봄에 쓰는 시간은 하루 평균 3~4시간으로 보고되었습니다. 숙제, 취미, 잠과 겹치는 시간입니다." },
     { title: "절반 이상이 아무에게도 말하지 않았다", body: "일본의 중고생 조사에서는 절반 이상이 돌봄에 대해 아무에게도 이야기한 적이 없었습니다. \"말해도 이해받지 못할 것 같다\"는 이유가 많았습니다." },
     { title: "세계에서는", body: "영 케어러는 모든 나라에 있습니다. 영국에서는 2021년 인구조사에서 5~17세의 영 케어러가 약 12만 명으로 집계되었고, 통계청 스스로 실제 수는 더 많을 것이라고 말합니다. 독일의 전국 조사에서는 12~17세의 약 5%가 정기적으로 가족 돌봄을 돕고 있었습니다. 스위스의 대규모 학교 조사에서는 7.9%였습니다. 미국의 국가 생활시간 조사 데이터는 15~18세의 10명 중 1명 가까이가 어른의 돌봄을 돕고 있음을 시사합니다. 그리고 많은 나라에서는, 아직 아무도 세어 본 적이 없습니다." },
     { title: "혼자만의 시간의 역할", body: "책을 읽고, 음악을 듣고, 천천히 숨을 쉬는 것. 이런 상황의 청소년들은 혼자 조용히 보내는 시간이 버티는 힘이 되었다고 자주 말합니다." }
   ],
   zh: [
-    { title: "日本的数据 (按年级)", body: "在日本的全国调查中,小学六年级约每15人有1人(6.5%)、初中二年级约每18人有1人(5.7%)、高中二年级约每24人有1人(4.1%)回答自己在照顾家人。也就是说,每个班级都有一两个人。" },
+    { title: "日本的数据 (按年级)", body: "在日本的全国调查中,小学六年级约每15人有1人(6.5%)、初中二年级约每17人有1人(5.7%)、高中二年级约每24人有1人(4.1%)回答自己在照顾家人。也就是说,每个班级都有一两个人。" },
     { title: "每天,好几个小时", body: "同一调查中,约有一半学生几乎每天都在帮助家人。工作日用于照顾的时间平均每天3到4小时。这些时间与作业、爱好和睡眠相重叠。" },
     { title: "一半以上的人没有告诉过任何人", body: "在对日本初高中生的调查中,一半以上的人从未和任何人谈过自己照顾家人的事。\"说了也不会被理解\"是常见的理由。" },
     { title: "世界各地", body: "每个国家都有年轻照顾者。在英格兰,2021年人口普查统计出约12万名5至17岁的年轻照顾者,而统计局自己也表示实际人数可能更多。在德国,全国调查发现12至17岁中约有5%的人经常帮忙照顾家人。在瑞士,一项大规模学校调查发现比例为7.9%。在美国,国家时间使用数据显示,15至18岁中接近十分之一的人在帮忙照顾成年人。而在许多国家,还没有人统计过。" },
     { title: "独处时间的作用", body: "读书、听音乐、慢慢呼吸。处在这种情况中的年轻人常说,安静的独处时间帮助他们坚持了下来。" }
   ],
   ar: [
-    { title: "أرقام من اليابان (حسب الصف الدراسي)", body: "في المسوح الوطنية اليابانية، أفاد نحو 1 من كل 15 تلميذًا في الصف السادس (6.5%)، و1 من كل 18 في الثاني الإعدادي (5.7%)، و1 من كل 24 في الثاني الثانوي (4.1%) بأنهم يعتنون بأحد أفراد الأسرة. أي واحد أو اثنان في كل صف." },
+    { title: "أرقام من اليابان (حسب الصف الدراسي)", body: "في المسوح الوطنية اليابانية، أفاد نحو 1 من كل 15 تلميذًا في الصف السادس (6.5%)، و1 من كل 17 في الثاني الإعدادي (5.7%)، و1 من كل 24 في الثاني الثانوي (4.1%) بأنهم يعتنون بأحد أفراد الأسرة. أي واحد أو اثنان في كل صف." },
     { title: "كل يوم، لساعات", body: "في المسوح نفسها، كان نحو نصف هؤلاء الطلاب يساعدون أسرهم كل يوم تقريبًا. وفي أيام الدراسة تستغرق الرعاية في المتوسط من 3 إلى 4 ساعات يوميًا. وهي ساعات تتداخل مع الواجبات والهوايات والنوم." },
     { title: "أكثر من النصف لم يخبروا أحدًا", body: "في مسوح شملت طلاب الإعدادي والثانوي في اليابان، لم يتحدث أكثر من نصفهم مع أي أحد عن دورهم. وكان سبب شائع: «لا أظن أن أحدًا سيفهم»." },
     { title: "حول العالم", body: "مقدمو الرعاية اليافعون موجودون في كل بلد. في إنجلترا، أحصى تعداد 2021 نحو 120,000 يافعًا مقدمًا للرعاية بين 5 و17 عامًا، ويقول مكتب الإحصاء نفسه إن الرقم الحقيقي أعلى على الأرجح. وفي ألمانيا وجد مسح وطني أن نحو 5% ممن هم بين 12 و17 عامًا يساعدون بانتظام في رعاية أحد أفراد الأسرة. وفي سويسرا وجدت دراسة مدرسية كبيرة 7.9%. وفي الولايات المتحدة تشير بيانات استخدام الوقت الوطنية إلى أن نحو 1 من كل 10 بين 15 و18 عامًا يساعد في رعاية شخص بالغ. وفي بلدان كثيرة، لم يقم أحد بالعدّ بعد." },
