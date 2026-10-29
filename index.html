@@ -44,9 +44,9 @@
         <span id="breath-phase" class="breath-phase"></span>
       </div>
     </div>
-    <div id="oneline" class="oneline"></div>
+    <div id="oneline" class="oneline" role="button" tabindex="0"></div>
     <!-- みため(いろ/もじ)の入口。フッターの上・目立たない下線リンク(アクセシビリティは隠さず見える場所に) -->
-    <div class="memo-foot"><span id="open-looks" class="link-set" data-i18n="looksOpen">みため(いろ と もじ)</span></div>
+    <div class="memo-foot"><span id="open-looks" class="link-set" role="button" tabindex="0" data-i18n="looksOpen">みため(いろ と もじ)</span></div>
   </section>
 
   <!-- ② データ(旧おなじひと。タブラベルのみ「データ」・内部id=onajiは不変) -->
@@ -87,7 +87,7 @@
     <button id="memo-save" class="btn-primary" data-i18n="memoSave">そっと しまう</button>
     <div id="memo-view-list" class="memo-view-list"></div>
     <button id="memo-view-close" class="btn-line" data-i18n="close2">とじる</button>
-    <div class="memo-foot"><span id="open-settings" class="link-set" data-i18n="settings">せってい</span></div>
+    <div class="memo-foot"><span id="open-settings" class="link-set" role="button" tabindex="0" data-i18n="settings">せってい</span></div>
   </div>
 </div>
 
@@ -150,25 +150,28 @@
     <div class="set-block">
       <p class="set-note" data-i18n="privacyNote">記録はこの端末の中だけ。どこにも送信されません</p>
       <p class="credit"><a id="credit-link" class="credit-link" href="https://soudansoyogi.com/" target="_blank" rel="noopener" data-i18n="credit">アプリ開発：介護と支援の相談どころ　そよぎ</a></p>
-      <p class="credit-ver" data-i18n="version">バージョン 1.10</p>
+      <p class="credit-ver" data-i18n="version">バージョン 1.11</p>
     </div>
 
     <button id="settings-close" class="btn-line" data-i18n="close2">とじる</button>
   </div>
 </div>
 
-<div id="toast" class="toast hidden"></div>
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
 <script src="lang.js"></script>
 <script src="audio.js"></script>
 <script src="tap.js"></script>
 <script src="app.js"></script>
-<!-- Farcaster Mini App SDK: ホスト内なら起動準備完了を通知。通常のWeb/PWA・オフラインでは無害（失敗は握りつぶす） -->
+<!-- Farcaster Mini App SDK: ホスト内なら起動準備完了を通知(2026-10-30: Farcaster の中で開いたときだけ読む) -->
 <script type="module">
-  try {
-    const { sdk } = await import("https://esm.sh/@farcaster/miniapp-sdk");
-    await sdk.actions.ready();
-  } catch (e) { /* Farcaster外／オフラインでは何もしない */ }
+  /* Farcaster の中(iframe / アプリの WebView)で開いたときだけ SDK を読む。ふつうのブラウザ・PWA では外へつながない */
+  if ((window.self !== window.top) || window.ReactNativeWebView) {
+    try {
+      const { sdk } = await import("https://esm.sh/@farcaster/miniapp-sdk");
+      await sdk.actions.ready();
+    } catch (e) { /* Farcaster外では何もしない */ }
+  }
 </script>
 </body>
 </html>
