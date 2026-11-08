@@ -21,7 +21,7 @@ window.KYUKEI_LANG = {
       '休むことと さぼることは、別のものとされています。'
     ],
 
-    onajiNote: '数字は 国の全国調査（令和2〜3年度・厚生労働省/文部科学省など）にもとづいています',
+    onajiNote: '数字は 国の全国調査（令和2〜3年度と令和7年度・厚生労働省/文部科学省/こども家庭庁など）にもとづいています',
 
     shitte: [
       { title:'ヤングケアラーという言葉',
@@ -164,7 +164,7 @@ window.KYUKEI_LANG = {
     fsXL: 'とくだい',
     privacyNote: '記録はこの端末の中だけ。どこにも送信されません',
     credit: 'アプリ開発：介護と支援の相談どころ　そよぎ',
-    version: 'バージョン 1.11',
+    version: 'バージョン 1.12',
 
     introOk: 'わかった',
     intro: 'この部屋には、かくれた機能があります。\nいちばん上の「{name}」の名前を {n}回 つづけてタップすると、\nメモと せっていの部屋が ひらきます。\nこの案内は、もう二度と表示されません。'
@@ -185,7 +185,7 @@ window.KYUKEI_LANG = {
       'Resting and slacking off are considered two different things.'
     ],
 
-    onajiNote: "Figures are based on Japan's national surveys (2020–2021) and on the sources noted for other countries.",
+    onajiNote: "Figures are based on Japan's national surveys (2020–2021, 2025–2026) and on the sources noted for other countries.",
 
     shitte: [
       { title:'The words "young carer"',
@@ -328,7 +328,7 @@ window.KYUKEI_LANG = {
     fsXL: 'Extra large',
     privacyNote: 'Everything stays on this device. Nothing is ever sent anywhere.',
     credit: 'App development: SOYOGI - Care & Support Consultation',
-    version: 'Version 1.11',
+    version: 'Version 1.12',
 
     introOk: 'Got it',
     intro: 'This room has a hidden feature.\nTap the name "{name}" at the top {n} times in a row\nto open the Memo Room and Settings.\nThis notice will never be shown again.'
@@ -347,7 +347,7 @@ window.KYUKEI_LANG = {
       "Zeit, in der man nichts tut, gilt als notwendige Erholung für das Gehirn.",
       "Ausruhen und Faulenzen gelten als zwei verschiedene Dinge."
     ],
-    onajiNote: "Die Zahlen beruhen auf Japans landesweiten Befragungen (2020-2021) und den genannten Quellen anderer Länder.",
+    onajiNote: "Die Zahlen beruhen auf Japans landesweiten Befragungen (2020-2021, 2025-2026) und den genannten Quellen anderer Länder.",
     shitte: [
       { title: "Das Wort „Young Carer\"", body: "Kinder und Jugendliche, die regelmäßig Familienmitglieder versorgen oder den Haushalt führen, nennt man „Young Carers\". Zum Beispiel: keine Zeit für Hausaufgaben oder Hobbys wegen Pflege und Haushalt, Verabredungen oft absagen, nachts für ein Familienmitglied aufstehen. Wenn solche Tage andauern, ist genau das gemeint." },
       { title: "Über die Leistung", body: "Haushalt und die Versorgung eines Familienmitglieds sind harte Arbeit, selbst für Erwachsene. Fachleute beschreiben Jugendliche, die das leisten, als bemerkenswert. Bekannt ist auch: Die Betroffenen selbst halten es oft für „nichts Besonderes\"." },
@@ -480,7 +480,7 @@ window.KYUKEI_LANG = {
     fsXL: "Sehr groß",
     privacyNote: "Alles bleibt auf diesem Gerät. Nichts wird jemals irgendwohin gesendet.",
     credit: "App-Entwicklung: SOYOGI - Beratungsstelle für Pflege und Unterstützung",
-    version: "Version 1.11",
+    version: "Version 1.12",
     introOk: "Verstanden",
     intro: "Dieses Zimmer hat eine verborgene Funktion.\nOben den Namen „{name}\" {n} Mal hintereinander antippen,\ndann öffnen sich Memozimmer und Einstellungen.\nDieser Hinweis wird nie wieder angezeigt."
   },
@@ -498,7 +498,7 @@ window.KYUKEI_LANG = {
       "Le temps passé à ne rien faire est considéré comme un repos nécessaire pour le cerveau.",
       "Se reposer et paresser sont considérés comme deux choses différentes."
     ],
-    onajiNote: "Les chiffres reposent sur les enquêtes nationales du Japon (2020-2021) et sur les sources citées pour les autres pays.",
+    onajiNote: "Les chiffres reposent sur les enquêtes nationales du Japon (2020-2021, 2025-2026) et sur les sources citées pour les autres pays.",
     shitte: [
       { title: "Les mots « jeune aidant »", body: "On appelle « jeunes aidants » les enfants et adolescents qui s'occupent régulièrement d'un proche ou tiennent la maison. Par exemple : pas de temps pour les devoirs ou les loisirs à cause des soins et des tâches, des sorties souvent refusées, des réveils la nuit pour un proche. Quand ces journées se répètent, c'est de cela qu'il s'agit." },
       { title: "Sur l'effort fourni", body: "Tenir une maison et s'occuper d'un proche est un travail dur, même pour un adulte. Les professionnels de l'aide décrivent les adolescents qui le font comme accomplissant quelque chose de remarquable. On sait aussi que les intéressés eux-mêmes ont tendance à trouver cela « normal »." },
@@ -631,7 +631,7 @@ window.KYUKEI_LANG = {
     fsXL: "Très grande",
     privacyNote: "Tout reste sur cet appareil. Rien n'est jamais envoyé nulle part.",
     credit: "Développement de l'application : SOYOGI - Lieu de conseil en soins et soutien",
-    version: "Version 1.11",
+    version: "Version 1.12",
     introOk: "Compris",
     intro: "Cette pièce a une fonction cachée.\nToucher le nom « {name} » en haut {n} fois d'affilée\nouvre la pièce aux mémos et les réglages.\nCe message ne s'affichera plus jamais."
   },
@@ -649,7 +649,7 @@ window.KYUKEI_LANG = {
       "El tiempo sin hacer nada se considera un descanso necesario para el cerebro.",
       "Descansar y holgazanear se consideran cosas distintas."
     ],
-    onajiNote: "Las cifras se basan en las encuestas nacionales de Japón (2020-2021) y en las fuentes citadas para otros países.",
+    onajiNote: "Las cifras se basan en las encuestas nacionales de Japón (2020-2021, 2025-2026) y en las fuentes citadas para otros países.",
     shitte: [
       { title: "Las palabras \"joven cuidador\"", body: "A los niños y adolescentes que cuidan con regularidad de un familiar o llevan la casa se les llama \"jóvenes cuidadores\". Por ejemplo: sin tiempo para deberes o aficiones por los cuidados y las tareas, rechazar a menudo los planes con amigos, levantarse de noche por un familiar. Cuando esos días se repiten, a eso se refiere el término." },
       { title: "Sobre el esfuerzo", body: "Llevar una casa y cuidar de un familiar es un trabajo duro, incluso para una persona adulta. Los profesionales del apoyo describen a los adolescentes que lo hacen como personas que logran algo notable. También se sabe que ellos mismos tienden a sentir que \"no es nada especial\"." },
@@ -782,7 +782,7 @@ window.KYUKEI_LANG = {
     fsXL: "Muy grande",
     privacyNote: "Todo se queda en este dispositivo. Nunca se envía nada a ninguna parte.",
     credit: "Desarrollo de la aplicación: SOYOGI - Centro de consultas de cuidados y apoyo",
-    version: "Versión 1.11",
+    version: "Versión 1.12",
     introOk: "Entendido",
     intro: "Este cuarto tiene una función oculta.\nTocar el nombre \"{name}\" de arriba {n} veces seguidas\nabre el cuarto de las notas y los ajustes.\nEste aviso no volverá a mostrarse nunca."
   },
@@ -800,7 +800,7 @@ window.KYUKEI_LANG = {
       "Il tempo passato senza fare nulla è considerato un riposo necessario per il cervello.",
       "Riposare e oziare sono considerate due cose diverse."
     ],
-    onajiNote: "I numeri si basano sulle indagini nazionali del Giappone (2020-2021) e sulle fonti citate per gli altri paesi.",
+    onajiNote: "I numeri si basano sulle indagini nazionali del Giappone (2020-2021, 2025-2026) e sulle fonti citate per gli altri paesi.",
     shitte: [
       { title: "Le parole \"giovane caregiver\"", body: "I bambini e i ragazzi che si prendono cura regolarmente di un familiare o mandano avanti la casa vengono chiamati \"giovani caregiver\". Per esempio: niente tempo per compiti o passioni a causa di cura e faccende, inviti degli amici rifiutati spesso, alzarsi di notte per un familiare. Quando giornate così continuano, è questo che si intende." },
       { title: "Sull'impegno", body: "Mandare avanti una casa e prendersi cura di un familiare è un lavoro duro, anche per un adulto. Chi lavora nel sostegno descrive i ragazzi che lo fanno come persone che compiono qualcosa di notevole. Si sa anche che proprio loro tendono a sentirlo come \"niente di speciale\"." },
@@ -933,7 +933,7 @@ window.KYUKEI_LANG = {
     fsXL: "Molto grande",
     privacyNote: "Tutto resta su questo dispositivo. Niente viene mai inviato da nessuna parte.",
     credit: "Sviluppo dell'app: SOYOGI - Sportello di consulenza per cura e sostegno",
-    version: "Versione 1.11",
+    version: "Versione 1.12",
     introOk: "Capito",
     intro: "Questa stanza ha una funzione nascosta.\nToccare il nome \"{name}\" in alto {n} volte di fila\napre la stanza degli appunti e le impostazioni.\nQuesto avviso non verrà mai più mostrato."
   },
@@ -951,7 +951,7 @@ window.KYUKEI_LANG = {
       "O tempo sem fazer nada é considerado um descanso necessário para o cérebro.",
       "Descansar e vadiar são consideradas coisas diferentes."
     ],
-    onajiNote: "Os números se baseiam nas pesquisas nacionais do Japão (2020-2021) e nas fontes citadas para os outros países.",
+    onajiNote: "Os números se baseiam nas pesquisas nacionais do Japão (2020-2021, 2025-2026) e nas fontes citadas para os outros países.",
     shitte: [
       { title: "As palavras \"jovem cuidador\"", body: "Crianças e adolescentes que cuidam regularmente de um familiar ou tocam a casa são chamados de \"jovens cuidadores\". Por exemplo: sem tempo para dever de casa ou hobbies por causa dos cuidados e das tarefas, recusar muitas vezes os convites dos amigos, levantar de noite por um familiar. Quando dias assim continuam, é disso que o termo fala." },
       { title: "Sobre o esforço", body: "Tocar uma casa e cuidar de um familiar é trabalho pesado, até para adultos. Profissionais do apoio descrevem os adolescentes que fazem isso como pessoas que realizam algo notável. Também se sabe que eles mesmos tendem a achar que \"não é nada de mais\"." },
@@ -1084,7 +1084,7 @@ window.KYUKEI_LANG = {
     fsXL: "Muito grande",
     privacyNote: "Tudo fica neste aparelho. Nada é enviado para lugar nenhum.",
     credit: "Desenvolvimento do app: SOYOGI - Centro de consultas de cuidado e apoio",
-    version: "Versão 1.11",
+    version: "Versão 1.12",
     introOk: "Entendi",
     intro: "Este quarto tem uma função escondida.\nTocar o nome \"{name}\" lá em cima {n} vezes seguidas\nabre o quarto das notas e as configurações.\nEste aviso nunca mais será mostrado."
   },
@@ -1102,7 +1102,7 @@ window.KYUKEI_LANG = {
       "Tijd waarin je niets doet, geldt als noodzakelijke rust voor de hersenen.",
       "Uitrusten en luieren worden als twee verschillende dingen gezien."
     ],
-    onajiNote: "De cijfers zijn gebaseerd op de landelijke onderzoeken van Japan (2020-2021) en op de genoemde bronnen voor andere landen.",
+    onajiNote: "De cijfers zijn gebaseerd op de landelijke onderzoeken van Japan (2020-2021, 2025-2026) en op de genoemde bronnen voor andere landen.",
     shitte: [
       { title: "De woorden \"jonge mantelzorger\"", body: "Kinderen en jongeren die regelmatig voor een familielid zorgen of het huishouden draaiende houden, worden \"jonge mantelzorgers\" genoemd. Bijvoorbeeld: geen tijd voor huiswerk of hobby's door zorg en taken, afspraken met vrienden vaak afzeggen, 's nachts opstaan voor een familielid. Als zulke dagen aanhouden, is dat wat de term betekent." },
       { title: "Over de inzet", body: "Een huishouden draaien en voor een familielid zorgen is zwaar werk, zelfs voor volwassenen. Hulpverleners beschrijven jongeren die dit doen als mensen die iets bijzonders presteren. Ook is bekend dat juist zij zelf vaak vinden dat het \"niets bijzonders\" is." },
@@ -1235,7 +1235,7 @@ window.KYUKEI_LANG = {
     fsXL: "Extra groot",
     privacyNote: "Alles blijft op dit apparaat. Er wordt nooit iets ergens naartoe gestuurd.",
     credit: "App-ontwikkeling: SOYOGI - Adviespunt voor zorg en ondersteuning",
-    version: "Versie 1.11",
+    version: "Versie 1.12",
     introOk: "Begrepen",
     intro: "Deze kamer heeft een verborgen functie.\nTik {n} keer achter elkaar op de naam \"{name}\" bovenaan,\ndan openen de memokamer en de instellingen.\nDeze melding wordt nooit meer getoond."
   },
@@ -1253,7 +1253,7 @@ window.KYUKEI_LANG = {
       "Tid då man inte gör någonting räknas som nödvändig vila för hjärnan.",
       "Att vila och att lata sig räknas som två olika saker."
     ],
-    onajiNote: "Siffrorna bygger på Japans nationella undersökningar (2020-2021) och på angivna källor för andra länder.",
+    onajiNote: "Siffrorna bygger på Japans nationella undersökningar (2020-2021, 2025-2026) och på angivna källor för andra länder.",
     shitte: [
       { title: "Orden \"ung omsorgsgivare\"", body: "Barn och unga som regelbundet tar hand om en familjemedlem eller sköter hemmet kallas \"unga omsorgsgivare\". Till exempel: ingen tid för läxor eller fritid på grund av omsorg och sysslor, ofta tacka nej till kompisar, gå upp på natten för en familjemedlem. När sådana dagar fortsätter är det just det ordet betyder." },
       { title: "Om insatsen", body: "Att sköta ett hem och ta hand om en familjemedlem är hårt arbete, även för vuxna. De som arbetar med stöd beskriver unga som gör detta som personer som gör något anmärkningsvärt. Det är också känt att de själva ofta tycker att det \"inte är något särskilt\"." },
@@ -1386,7 +1386,7 @@ window.KYUKEI_LANG = {
     fsXL: "Extra stor",
     privacyNote: "Allt stannar på den här enheten. Ingenting skickas någonsin någonstans.",
     credit: "Apputveckling: SOYOGI - Rådgivning för omsorg och stöd",
-    version: "Version 1.11",
+    version: "Version 1.12",
     introOk: "Förstått",
     intro: "Det här rummet har en dold funktion.\nTryck på namnet \"{name}\" högst upp {n} gånger i rad,\nså öppnas anteckningsrummet och inställningarna.\nDet här meddelandet visas aldrig igen."
   },
@@ -1404,7 +1404,7 @@ window.KYUKEI_LANG = {
       "아무것도 하지 않는 시간은 뇌에 필요한 휴식으로 여겨집니다.",
       "쉬는 것과 게으름은 서로 다른 것으로 여겨집니다."
     ],
-    onajiNote: "숫자는 일본의 전국 조사(2020-2021)와 각 나라별로 표기된 출처에 근거합니다.",
+    onajiNote: "숫자는 일본의 전국 조사(2020-2021, 2025-2026)와 각 나라별로 표기된 출처에 근거합니다.",
     shitte: [
       { title: "'영 케어러'라는 말", body: "가족을 돌보거나 집안일을 도맡아 하는 어린이·청소년을 '영 케어러'라고 부릅니다. 예를 들어 돌봄과 집안일 때문에 숙제나 동아리 시간이 없다, 친구의 제안을 자주 거절한다, 밤중에 가족 때문에 일어난다. 이런 날들이 계속되는 상태를 가리키는 말입니다." },
       { title: "노력에 대한 평가", body: "집안일과 가족 돌봄은 어른에게도 힘든 일입니다. 이를 해내는 10대에 대해 지원 현장에서는 \"대단한 일을 하고 있다\"고 평가합니다. 정작 본인일수록 \"별것 아니다\"라고 느끼기 쉽다는 것도 알려져 있습니다." },
@@ -1537,7 +1537,7 @@ window.KYUKEI_LANG = {
     fsXL: "아주 크게",
     privacyNote: "기록은 이 기기 안에만 있습니다. 어디에도 전송되지 않습니다.",
     credit: "앱 개발: SOYOGI - 돌봄과 지원 상담소",
-    version: "버전 1.11",
+    version: "버전 1.12",
     introOk: "알겠어요",
     intro: "이 방에는 숨겨진 기능이 있습니다.\n맨 위의 \"{name}\" 이름을 {n}번 연달아 탭하면\n메모의 방과 설정이 열립니다.\n이 안내는 두 번 다시 표시되지 않습니다."
   },
@@ -1555,7 +1555,7 @@ window.KYUKEI_LANG = {
       "什么都不做的时间,被认为是大脑必需的休息。",
       "休息和偷懒,被认为是两回事。"
     ],
-    onajiNote: "数字基于日本的全国调查(2020-2021)以及各国注明的出处。",
+    onajiNote: "数字基于日本的全国调查(2020-2021, 2025-2026)以及各国注明的出处。",
     shitte: [
       { title: "\"年轻照顾者\"这个词", body: "经常照顾家人或操持家务的儿童和青少年,被称为\"年轻照顾者\"。例如:因为照顾和家务没有时间做作业或参加社团;经常拒绝朋友的邀请;半夜为家人起床。当这样的日子持续下去,就是这个词所指的状态。" },
       { title: "关于付出的评价", body: "家务和照顾家人,即使对大人来说也是辛苦的工作。对于承担这些的青少年,支援一线的评价是\"在做了不起的事\"。同时也众所周知,越是本人越容易觉得\"没什么大不了\"。" },
@@ -1688,7 +1688,7 @@ window.KYUKEI_LANG = {
     fsXL: "特大",
     privacyNote: "记录只保存在这台设备里,不会发送到任何地方。",
     credit: "应用开发: SOYOGI - 照护与支援咨询处",
-    version: "版本 1.11",
+    version: "版本 1.12",
     introOk: "知道了",
     intro: "这个房间有一个隐藏功能。\n连续点按最上方的名字\"{name}\" {n}次,\n便签的房间和设置就会打开。\n这条提示不会再次显示。"
   },
@@ -1706,7 +1706,7 @@ window.KYUKEI_LANG = {
       "الوقت الذي لا نفعل فيه شيئًا يُعتبر راحة ضرورية للدماغ.",
       "الراحة والكسل يُعتبران شيئين مختلفين."
     ],
-    onajiNote: "تستند الأرقام إلى المسوح الوطنية اليابانية (2020-2021) وإلى المصادر المذكورة للبلدان الأخرى.",
+    onajiNote: "تستند الأرقام إلى المسوح الوطنية اليابانية (2020-2021, 2025-2026) وإلى المصادر المذكورة للبلدان الأخرى.",
     shitte: [
       { title: "كلمة «مقدم رعاية يافع»", body: "يُطلق اسم «مقدمي الرعاية اليافعين» على الأطفال والمراهقين الذين يعتنون بانتظام بأحد أفراد الأسرة أو يديرون شؤون البيت. مثلًا: لا وقت للواجبات أو الهوايات بسبب الرعاية والأعمال المنزلية، ورفض دعوات الأصدقاء كثيرًا، والاستيقاظ ليلًا من أجل أحد أفراد الأسرة. حين تستمر أيام كهذه، فهذا ما تعنيه الكلمة." },
       { title: "عن تقدير الجهد", body: "الأعمال المنزلية ورعاية أحد أفراد الأسرة عمل شاق حتى على الكبار. والعاملون في مجال الدعم يصفون اليافعين الذين يقومون بذلك بأنهم يفعلون شيئًا رائعًا. ومن المعروف أيضًا أن أصحاب الشأن أنفسهم يميلون إلى الشعور بأنه «شيء عادي»." },
@@ -1839,7 +1839,7 @@ window.KYUKEI_LANG = {
     fsXL: "كبير جدًا",
     privacyNote: "كل شيء يبقى على هذا الجهاز. لا يُرسل أي شيء إلى أي مكان أبدًا.",
     credit: "تطوير التطبيق: SOYOGI - مركز استشارات الرعاية والدعم",
-    version: "الإصدار 1.11",
+    version: "الإصدار 1.12",
     introOk: "فهمت",
     intro: "لهذه الغرفة خاصية مخفية.\nانقر على الاسم «{name}» في الأعلى {n} مرات متتالية\nفتُفتح غرفة المذكرات والإعدادات.\nلن يظهر هذا التنبيه مرة أخرى أبدًا."
   }

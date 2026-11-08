@@ -212,7 +212,10 @@ check('呼吸フェーズに「すって…」が入る', byId('breath-phase').t
 
 /* カード表示(v0.6 データ4カード・記事調が出ているか) */
 const onajiTxt = allText(byId('onaji-list'));
-check('データ: 4カード(学年別/毎日数時間/だれにも話していない/ひとりの時間)', byId('onaji-list').children.filter(c => c.className === 'card').length === 4);
+check('データ: 5カード(学年別/毎日数時間/だれにも話していない/ことばを聞いたことがある人/ひとりの時間)', byId('onaji-list').children.filter(c => c.className === 'card').length === 5);
+/* v1.12: 令和7年度の国の調査(報告書 令和8年3月・図表2-9)= 中2 34.0+24.0=58.0% / 全日制高2 61.8+21.4=83.2% / 小6「聞いたことはない」53.6% */
+check('データ: 「ことばを聞いたことがある人」(中2 約58%・全日制高2 約83%・小6は半分以上が聞いたことはない)',
+  onajiTxt.includes('中学2年生で 約58%、全日制高校2年生で 約83%') && onajiTxt.includes('前回の調査（令和2年度）より大きく増えています') && onajiTxt.includes('半分以上が「聞いたことはない」'));
 /* 中2は「約17人に1人」= こども家庭庁のヤングケアラー特設サイトの書き方のまま(2026-10-30 確認・計算の 17.5 で 18 にしない) */
 check('データ: 学年別の3つの「約N人に1人」(小6約15/中2約17/高2約24)が出る',
   onajiTxt.includes('小学6年生で 約15人に1人（6.5%）') &&
@@ -221,8 +224,8 @@ check('データ: 学年別の3つの「約N人に1人」(小6約15/中2約17/�
 check('データ: 「毎日、数時間」カード(ほぼ毎日・平均1日3〜4時間)が出る',
   onajiTxt.includes('「ほぼ毎日」がいちばん多く、およそ半数') && onajiTxt.includes('平均で1日3〜4時間と報告されています'));
 check('データ: 「半分以上が、だれにも話していない」が出る', onajiTxt.includes('「言ってもわかってもらえない気がする」という理由が多くあげられています'));
-check('データ: 末尾の出典注記が令和2〜3年度に差し替わっている',
-  onajiTxt.includes('国の全国調査（令和2〜3年度・厚生労働省/文部科学省など）にもとづいています'));
+check('データ: 末尾の出典注記が令和2〜3年度と令和7年度になっている',
+  onajiTxt.includes('国の全国調査（令和2〜3年度と令和7年度・厚生労働省/文部科学省/こども家庭庁など）にもとづいています'));
 const shitteTxt = allText(byId('shitte-list'));
 check('しっておく: 6カードが新文言で揃う(言葉/評価/原因/相談ルール/両立/頼ること)',
   shitteTxt.includes('子ども・若者を「ヤングケアラー」と呼びます') &&
@@ -364,7 +367,7 @@ check('既定lang=ja(navigator ja-JP)', documentStub.documentElement.lang === 'j
 /* ja文言ゴールデン(現行と一字一致=lang.jsへlossless移設) */
 check('ja ゴールデン: 一言[0]', sandbox.T('onelines')[0] === 'ゆっくりした呼吸には、心拍を落ちつかせる はたらきがあります。');
 check('ja ゴールデン: しっておく[0].body', sandbox.T('shitte')[0].body === '家族の世話や家事を日常的に担う子ども・若者を「ヤングケアラー」と呼びます。例えば、世話や家事で宿題や部活の時間がとれない。友だちの誘いを断ることが多い。夜中に家族の対応で起きる。こうした毎日がつづく状態を指します。');
-check('ja ゴールデン: onajiNote', sandbox.T('onajiNote') === '数字は 国の全国調査（令和2〜3年度・厚生労働省/文部科学省など）にもとづいています');
+check('ja ゴールデン: onajiNote', sandbox.T('onajiNote') === '数字は 国の全国調査（令和2〜3年度と令和7年度・厚生労働省/文部科学省/こども家庭庁など）にもとづいています');
 check('ja ゴールデン: madoIntro', sandbox.T('madoIntro') === '相談するかどうかは、本人が決めてよいこと、とされています。ここでは、10代が使える主な窓口を紹介します。');
 check('ja ゴールデン: memoSaved / settings / close', sandbox.T('memoSaved') === 'しまいました' && sandbox.T('settings') === 'せってい' && sandbox.T('close') === '× とじる');
 
@@ -375,7 +378,7 @@ check('en: タブ名 Breathe/Data/Basics/Helplines', sandbox.T('tab.hitoiki') ==
 check('en: 一言[0]', byId('oneline').textContent === 'Slow breathing is known to calm the heart rate.');
 check('en: 呼吸フェーズ = Breathe in…', byId('breath-phase').textContent === 'Breathe in…');
 const enOnaji = allText(byId('onaji-list'));
-check('en データ: 5カード(Around the worldを含む)', byId('onaji-list').children.filter(c => c.className === 'card').length === 5 && enOnaji.includes('Around the world') && enOnaji.includes('Young carers exist in every country'));
+check('en データ: 6カード(Around the world・How many have heard the termを含む)', byId('onaji-list').children.filter(c => c.className === 'card').length === 6 && enOnaji.includes('How many have heard the term (Japan)') && enOnaji.includes('Around the world') && enOnaji.includes('Young carers exist in every country'));
 check('en データ: 学年別(1 in 15/17/24)+国際数値', enOnaji.includes('about 1 in 15 sixth graders (6.5%)') && enOnaji.includes('about 1 in 17') && enOnaji.includes('about 1 in 24') && enOnaji.includes('about 120,000 young carers'));
 check('en データ: 出典注記(Japan\'s national surveys)', enOnaji.includes('Figures are based on Japan'));
 const enShitte = allText(byId('shitte-list'));
@@ -395,7 +398,7 @@ check('en まどぐち: 電話は tel: / Web は https(_blank)', collectTag(byId
 
 /* 日本語へ戻す(以降のブロックはfresh instanceだが、mainはjaに戻しておく) */
 sandbox.setLang('ja');
-check('ja復帰: appName/データ4カード/まどぐち4件', byId('hd-title').textContent === '10代の情報室' && byId('onaji-list').children.filter(c => c.className === 'card').length === 4 && byId('madoguchi-list').children.filter(c => c.className === 'card').length === 4);
+check('ja復帰: appName/データ5カード/まどぐち4件', byId('hd-title').textContent === '10代の情報室' && byId('onaji-list').children.filter(c => c.className === 'card').length === 5 && byId('madoguchi-list').children.filter(c => c.className === 'card').length === 4);
 
 /* 🌐は連打判定に含めない(fresh instance・既定goal3) */
 const langInst = makeInstance({});
@@ -432,11 +435,11 @@ ADDED.forEach(c => {
     const dcards = byId('onaji-list').children.filter(x => x.className === 'card').length;
     const mcards = byId('madoguchi-list').children.filter(x => x.className === 'card').length;
     if(app !== 'Teen Info Room') renderFails.push(c + ' appName=' + app);
-    if(dcards !== 5) renderFails.push(c + ' onaji=' + dcards);
+    if(dcards !== 6) renderFails.push(c + ' onaji=' + dcards);
     if(mcards !== 2) renderFails.push(c + ' mado=' + mcards);
   }catch(e){ renderFails.push(c + ' EXC ' + e.message); }
 });
-check('追加10言語: appName=Teen Info Room・データ5枚・まどぐち2枚・例外なし', renderFails.length === 0);
+check('追加10言語: appName=Teen Info Room・データ6枚・まどぐち2枚・例外なし', renderFails.length === 0);
 if(renderFails.length) console.log('    ' + renderFails.join(' / '));
 /* ar は dir=rtl・戻すと ltr */
 sandbox.setLang('ar');
