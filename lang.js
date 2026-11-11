@@ -14,6 +14,9 @@ window.KYUKEI_LANG = {
 
     breathIn: 'すって…',
     breathOut: 'はいて…',
+    breathLeft: "あと {n} 回",
+    breathDone: "ここで ひと区切り。つづけても やめても だいじょうぶ",
+    breathAria: "呼吸のリズムを見せる円。4秒すって、6秒はきます",
     onelines: [
       'ゆっくりした呼吸には、心拍を落ちつかせる はたらきがあります。',
       '深呼吸は、3回くらいでも 効果があると言われています。',
@@ -22,6 +25,8 @@ window.KYUKEI_LANG = {
     ],
 
     onajiNote: '数字は 国の全国調査（令和2〜3年度と令和7年度・厚生労働省/文部科学省/こども家庭庁など）にもとづいています',
+    yr20: "調査: 令和2〜3年度",
+    yr25: "調査: 令和7年度",
 
     shitte: [
       { title:'ヤングケアラーという言葉',
@@ -162,12 +167,12 @@ window.KYUKEI_LANG = {
     fsNormal: 'ふつう',
     fsLarge: '大きい',
     fsXL: 'とくだい',
-    privacyNote: '記録はこの端末の中だけ。どこにも送信されません',
+    privacyNote: '記録はこの端末の中だけ。どこにも送信されません。端末を替えても、メモは引き継がれません',
     credit: 'アプリ開発：介護と支援の相談どころ　そよぎ',
-    version: 'バージョン 1.14',
+    version: 'バージョン 1.15',
 
     introOk: 'わかった',
-    intro: 'この部屋には、かくれた機能があります。\nいちばん上の「{name}」の名前を {n}回 つづけてタップすると、\nメモと せっていの部屋が ひらきます。\nこの案内は、もう二度と表示されません。'
+    intro: 'この部屋には、かくれた機能があります。\nいちばん上の「{name}」の名前を {n}回 つづけてタップすると、\nメモと せっていの部屋が ひらきます。\n相談先は、下の「{mado}」にあります。\nこの案内は、もう二度と表示されません。'
   },
 
   en: {
@@ -178,6 +183,9 @@ window.KYUKEI_LANG = {
 
     breathIn: 'Breathe in…',
     breathOut: 'Breathe out…',
+    breathLeft: "{n} more",
+    breathDone: "This is a good place to stop. Going on is fine too.",
+    breathAria: "Breathing guide circle. Breathe in for 4 seconds, out for 6 seconds.",
     onelines: [
       'Slow breathing is known to calm the heart rate.',
       'Even three deep breaths are said to make a difference.',
@@ -186,6 +194,8 @@ window.KYUKEI_LANG = {
     ],
 
     onajiNote: "Figures are based on Japan's national surveys (2020–2021, 2025–2026) and on the sources noted for other countries.",
+    yr20: "Survey: 2020-2021 (Japan)",
+    yr25: "Survey: 2025-2026 (Japan)",
 
     shitte: [
       { title:'The words "young carer"',
@@ -326,12 +336,12 @@ window.KYUKEI_LANG = {
     fsNormal: 'Normal',
     fsLarge: 'Large',
     fsXL: 'Extra large',
-    privacyNote: 'Everything stays on this device. Nothing is ever sent anywhere.',
+    privacyNote: 'Everything stays on this device. Nothing is ever sent anywhere. Memos are not carried over to a new device.',
     credit: 'App development: SOYOGI - Care & Support Consultation',
-    version: 'Version 1.14',
+    version: 'Version 1.15',
 
     introOk: 'Got it',
-    intro: 'This room has a hidden feature.\nTap the name "{name}" at the top {n} times in a row\nto open the Memo Room and Settings.\nThis notice will never be shown again.'
+    intro: 'This room has a hidden feature.\nTap the name "{name}" at the top {n} times in a row\nto open the Memo Room and Settings.\nPlaces to get help are under "{mado}" below.\nThis notice will never be shown again.'
   },
 
   de: {
@@ -341,6 +351,9 @@ window.KYUKEI_LANG = {
     tab: { hitoiki: "Atmen", onaji: "Daten", shitte: "Basiswissen", madoguchi: "Anlaufstellen" },
     breathIn: "Einatmen…",
     breathOut: "Ausatmen…",
+    breathLeft: "Noch {n}",
+    breathDone: "Hier ist ein guter Moment zum Aufhören. Weitermachen geht auch.",
+    breathAria: "Kreis als Atemhilfe. 4 Sekunden einatmen, 6 Sekunden ausatmen.",
     onelines: [
       "Langsames Atmen kann den Herzschlag beruhigen.",
       "Schon drei tiefe Atemzüge können etwas bewirken.",
@@ -348,6 +361,8 @@ window.KYUKEI_LANG = {
       "Ausruhen und Faulenzen gelten als zwei verschiedene Dinge."
     ],
     onajiNote: "Die Zahlen beruhen auf Japans landesweiten Befragungen (2020-2021, 2025-2026) und den genannten Quellen anderer Länder.",
+    yr20: "Befragung: 2020-2021 (Japan)",
+    yr25: "Befragung: 2025-2026 (Japan)",
     shitte: [
       { title: "Das Wort „Young Carer\"", body: "Kinder und Jugendliche, die regelmäßig Familienmitglieder versorgen oder den Haushalt führen, nennt man „Young Carers\". Zum Beispiel: keine Zeit für Hausaufgaben oder Hobbys wegen Pflege und Haushalt, Verabredungen oft absagen, nachts für ein Familienmitglied aufstehen. Wenn solche Tage andauern, ist genau das gemeint." },
       { title: "Über die Leistung", body: "Haushalt und die Versorgung eines Familienmitglieds sind harte Arbeit, selbst für Erwachsene. Fachleute beschreiben Jugendliche, die das leisten, als bemerkenswert. Bekannt ist auch: Die Betroffenen selbst halten es oft für „nichts Besonderes\"." },
@@ -478,11 +493,11 @@ window.KYUKEI_LANG = {
     fsNormal: "Normal",
     fsLarge: "Groß",
     fsXL: "Sehr groß",
-    privacyNote: "Alles bleibt auf diesem Gerät. Nichts wird jemals irgendwohin gesendet.",
+    privacyNote: "Alles bleibt auf diesem Gerät. Nichts wird jemals irgendwohin gesendet. Bei einem neuen Gerät werden die Memos nicht übernommen.",
     credit: "App-Entwicklung: SOYOGI - Beratungsstelle für Pflege und Unterstützung",
-    version: "Version 1.14",
+    version: "Version 1.15",
     introOk: "Verstanden",
-    intro: "Dieses Zimmer hat eine verborgene Funktion.\nOben den Namen „{name}\" {n} Mal hintereinander antippen,\ndann öffnen sich Memozimmer und Einstellungen.\nDieser Hinweis wird nie wieder angezeigt."
+    intro: "Dieses Zimmer hat eine verborgene Funktion.\nOben den Namen „{name}\" {n} Mal hintereinander antippen,\ndann öffnen sich Memozimmer und Einstellungen.\nHilfsangebote stehen unten unter „{mado}\".\nDieser Hinweis wird nie wieder angezeigt."
   },
 
   fr: {
@@ -492,6 +507,9 @@ window.KYUKEI_LANG = {
     tab: { hitoiki: "Respirer", onaji: "Données", shitte: "Repères", madoguchi: "Contacts" },
     breathIn: "Inspire…",
     breathOut: "Expire…",
+    breathLeft: "Encore {n}",
+    breathDone: "C'est un bon moment pour s'arrêter. Continuer est possible aussi.",
+    breathAria: "Cercle pour guider la respiration. Inspirer 4 secondes, expirer 6 secondes.",
     onelines: [
       "Une respiration lente aide le cœur à se calmer.",
       "Même trois grandes respirations peuvent faire une différence.",
@@ -499,6 +517,8 @@ window.KYUKEI_LANG = {
       "Se reposer et paresser sont considérés comme deux choses différentes."
     ],
     onajiNote: "Les chiffres reposent sur les enquêtes nationales du Japon (2020-2021, 2025-2026) et sur les sources citées pour les autres pays.",
+    yr20: "Enquête : 2020-2021 (Japon)",
+    yr25: "Enquête : 2025-2026 (Japon)",
     shitte: [
       { title: "Les mots « jeune aidant »", body: "On appelle « jeunes aidants » les enfants et adolescents qui s'occupent régulièrement d'un proche ou tiennent la maison. Par exemple : pas de temps pour les devoirs ou les loisirs à cause des soins et des tâches, des sorties souvent refusées, des réveils la nuit pour un proche. Quand ces journées se répètent, c'est de cela qu'il s'agit." },
       { title: "Sur l'effort fourni", body: "Tenir une maison et s'occuper d'un proche est un travail dur, même pour un adulte. Les professionnels de l'aide décrivent les adolescents qui le font comme accomplissant quelque chose de remarquable. On sait aussi que les intéressés eux-mêmes ont tendance à trouver cela « normal »." },
@@ -629,11 +649,11 @@ window.KYUKEI_LANG = {
     fsNormal: "Normale",
     fsLarge: "Grande",
     fsXL: "Très grande",
-    privacyNote: "Tout reste sur cet appareil. Rien n'est jamais envoyé nulle part.",
+    privacyNote: "Tout reste sur cet appareil. Rien n'est jamais envoyé nulle part. Les mémos ne passent pas sur un nouvel appareil.",
     credit: "Développement de l'application : SOYOGI - Lieu de conseil en soins et soutien",
-    version: "Version 1.14",
+    version: "Version 1.15",
     introOk: "Compris",
-    intro: "Cette pièce a une fonction cachée.\nToucher le nom « {name} » en haut {n} fois d'affilée\nouvre la pièce aux mémos et les réglages.\nCe message ne s'affichera plus jamais."
+    intro: "Cette pièce a une fonction cachée.\nToucher le nom « {name} » en haut {n} fois d'affilée\nouvre la pièce aux mémos et les réglages.\nLes contacts d'aide sont en bas, sous « {mado} ».\nCe message ne s'affichera plus jamais."
   },
 
   es: {
@@ -643,6 +663,9 @@ window.KYUKEI_LANG = {
     tab: { hitoiki: "Respirar", onaji: "Datos", shitte: "Claves", madoguchi: "Contactos" },
     breathIn: "Inhala…",
     breathOut: "Exhala…",
+    breathLeft: "Faltan {n}",
+    breathDone: "Aquí se puede parar. También se puede seguir.",
+    breathAria: "Círculo que guía la respiración. Inhalar 4 segundos, exhalar 6 segundos.",
     onelines: [
       "Respirar despacio ayuda a calmar el ritmo del corazón.",
       "Incluso tres respiraciones profundas pueden marcar una diferencia.",
@@ -650,6 +673,8 @@ window.KYUKEI_LANG = {
       "Descansar y holgazanear se consideran cosas distintas."
     ],
     onajiNote: "Las cifras se basan en las encuestas nacionales de Japón (2020-2021, 2025-2026) y en las fuentes citadas para otros países.",
+    yr20: "Encuesta: 2020-2021 (Japón)",
+    yr25: "Encuesta: 2025-2026 (Japón)",
     shitte: [
       { title: "Las palabras \"joven cuidador\"", body: "A los niños y adolescentes que cuidan con regularidad de un familiar o llevan la casa se les llama \"jóvenes cuidadores\". Por ejemplo: sin tiempo para deberes o aficiones por los cuidados y las tareas, rechazar a menudo los planes con amigos, levantarse de noche por un familiar. Cuando esos días se repiten, a eso se refiere el término." },
       { title: "Sobre el esfuerzo", body: "Llevar una casa y cuidar de un familiar es un trabajo duro, incluso para una persona adulta. Los profesionales del apoyo describen a los adolescentes que lo hacen como personas que logran algo notable. También se sabe que ellos mismos tienden a sentir que \"no es nada especial\"." },
@@ -780,11 +805,11 @@ window.KYUKEI_LANG = {
     fsNormal: "Normal",
     fsLarge: "Grande",
     fsXL: "Muy grande",
-    privacyNote: "Todo se queda en este dispositivo. Nunca se envía nada a ninguna parte.",
+    privacyNote: "Todo se queda en este dispositivo. Nunca se envía nada a ninguna parte. Las notas no pasan a un dispositivo nuevo.",
     credit: "Desarrollo de la aplicación: SOYOGI - Centro de consultas de cuidados y apoyo",
-    version: "Versión 1.14",
+    version: "Versión 1.15",
     introOk: "Entendido",
-    intro: "Este cuarto tiene una función oculta.\nTocar el nombre \"{name}\" de arriba {n} veces seguidas\nabre el cuarto de las notas y los ajustes.\nEste aviso no volverá a mostrarse nunca."
+    intro: "Este cuarto tiene una función oculta.\nTocar el nombre \"{name}\" de arriba {n} veces seguidas\nabre el cuarto de las notas y los ajustes.\nLos lugares donde pedir ayuda están abajo, en \"{mado}\".\nEste aviso no volverá a mostrarse nunca."
   },
 
   it: {
@@ -794,6 +819,9 @@ window.KYUKEI_LANG = {
     tab: { hitoiki: "Respira", onaji: "Dati", shitte: "Basi", madoguchi: "Contatti" },
     breathIn: "Inspira…",
     breathOut: "Espira…",
+    breathLeft: "Ancora {n}",
+    breathDone: "Qui ci si può fermare. Si può anche continuare.",
+    breathAria: "Cerchio che guida il respiro. Inspirare per 4 secondi, espirare per 6 secondi.",
     onelines: [
       "Respirare lentamente aiuta a calmare il battito del cuore.",
       "Anche tre respiri profondi possono fare la differenza.",
@@ -801,6 +829,8 @@ window.KYUKEI_LANG = {
       "Riposare e oziare sono considerate due cose diverse."
     ],
     onajiNote: "I numeri si basano sulle indagini nazionali del Giappone (2020-2021, 2025-2026) e sulle fonti citate per gli altri paesi.",
+    yr20: "Indagine: 2020-2021 (Giappone)",
+    yr25: "Indagine: 2025-2026 (Giappone)",
     shitte: [
       { title: "Le parole \"giovane caregiver\"", body: "I bambini e i ragazzi che si prendono cura regolarmente di un familiare o mandano avanti la casa vengono chiamati \"giovani caregiver\". Per esempio: niente tempo per compiti o passioni a causa di cura e faccende, inviti degli amici rifiutati spesso, alzarsi di notte per un familiare. Quando giornate così continuano, è questo che si intende." },
       { title: "Sull'impegno", body: "Mandare avanti una casa e prendersi cura di un familiare è un lavoro duro, anche per un adulto. Chi lavora nel sostegno descrive i ragazzi che lo fanno come persone che compiono qualcosa di notevole. Si sa anche che proprio loro tendono a sentirlo come \"niente di speciale\"." },
@@ -931,11 +961,11 @@ window.KYUKEI_LANG = {
     fsNormal: "Normale",
     fsLarge: "Grande",
     fsXL: "Molto grande",
-    privacyNote: "Tutto resta su questo dispositivo. Niente viene mai inviato da nessuna parte.",
+    privacyNote: "Tutto resta su questo dispositivo. Niente viene mai inviato da nessuna parte. Gli appunti non passano a un nuovo dispositivo.",
     credit: "Sviluppo dell'app: SOYOGI - Sportello di consulenza per cura e sostegno",
-    version: "Versione 1.14",
+    version: "Versione 1.15",
     introOk: "Capito",
-    intro: "Questa stanza ha una funzione nascosta.\nToccare il nome \"{name}\" in alto {n} volte di fila\napre la stanza degli appunti e le impostazioni.\nQuesto avviso non verrà mai più mostrato."
+    intro: "Questa stanza ha una funzione nascosta.\nToccare il nome \"{name}\" in alto {n} volte di fila\napre la stanza degli appunti e le impostazioni.\nI contatti per chiedere aiuto sono in basso, in \"{mado}\".\nQuesto avviso non verrà mai più mostrato."
   },
 
   pt: {
@@ -945,6 +975,9 @@ window.KYUKEI_LANG = {
     tab: { hitoiki: "Respirar", onaji: "Dados", shitte: "Noções", madoguchi: "Contatos" },
     breathIn: "Inspire…",
     breathOut: "Expire…",
+    breathLeft: "Faltam {n}",
+    breathDone: "Aqui dá para parar. Também dá para continuar.",
+    breathAria: "Círculo que guia a respiração. Inspirar por 4 segundos, expirar por 6 segundos.",
     onelines: [
       "Respirar devagar ajuda a acalmar o ritmo do coração.",
       "Até três respirações profundas podem fazer diferença.",
@@ -952,6 +985,8 @@ window.KYUKEI_LANG = {
       "Descansar e vadiar são consideradas coisas diferentes."
     ],
     onajiNote: "Os números se baseiam nas pesquisas nacionais do Japão (2020-2021, 2025-2026) e nas fontes citadas para os outros países.",
+    yr20: "Pesquisa: 2020-2021 (Japão)",
+    yr25: "Pesquisa: 2025-2026 (Japão)",
     shitte: [
       { title: "As palavras \"jovem cuidador\"", body: "Crianças e adolescentes que cuidam regularmente de um familiar ou tocam a casa são chamados de \"jovens cuidadores\". Por exemplo: sem tempo para dever de casa ou hobbies por causa dos cuidados e das tarefas, recusar muitas vezes os convites dos amigos, levantar de noite por um familiar. Quando dias assim continuam, é disso que o termo fala." },
       { title: "Sobre o esforço", body: "Tocar uma casa e cuidar de um familiar é trabalho pesado, até para adultos. Profissionais do apoio descrevem os adolescentes que fazem isso como pessoas que realizam algo notável. Também se sabe que eles mesmos tendem a achar que \"não é nada de mais\"." },
@@ -1082,11 +1117,11 @@ window.KYUKEI_LANG = {
     fsNormal: "Normal",
     fsLarge: "Grande",
     fsXL: "Muito grande",
-    privacyNote: "Tudo fica neste aparelho. Nada é enviado para lugar nenhum.",
+    privacyNote: "Tudo fica neste aparelho. Nada é enviado para lugar nenhum. As notas não passam para um aparelho novo.",
     credit: "Desenvolvimento do app: SOYOGI - Centro de consultas de cuidado e apoio",
-    version: "Versão 1.14",
+    version: "Versão 1.15",
     introOk: "Entendi",
-    intro: "Este quarto tem uma função escondida.\nTocar o nome \"{name}\" lá em cima {n} vezes seguidas\nabre o quarto das notas e as configurações.\nEste aviso nunca mais será mostrado."
+    intro: "Este quarto tem uma função escondida.\nTocar o nome \"{name}\" lá em cima {n} vezes seguidas\nabre o quarto das notas e as configurações.\nOs contatos para pedir ajuda estão embaixo, em \"{mado}\".\nEste aviso nunca mais será mostrado."
   },
 
   nl: {
@@ -1096,6 +1131,9 @@ window.KYUKEI_LANG = {
     tab: { hitoiki: "Ademen", onaji: "Cijfers", shitte: "Basis", madoguchi: "Contact" },
     breathIn: "Adem in…",
     breathOut: "Adem uit…",
+    breathLeft: "Nog {n}",
+    breathDone: "Dit is een goed moment om te stoppen. Doorgaan mag ook.",
+    breathAria: "Cirkel als ademhulp. 4 seconden inademen, 6 seconden uitademen.",
     onelines: [
       "Langzaam ademen helpt het hart tot rust te komen.",
       "Zelfs drie keer diep ademhalen kan al verschil maken.",
@@ -1103,6 +1141,8 @@ window.KYUKEI_LANG = {
       "Uitrusten en luieren worden als twee verschillende dingen gezien."
     ],
     onajiNote: "De cijfers zijn gebaseerd op de landelijke onderzoeken van Japan (2020-2021, 2025-2026) en op de genoemde bronnen voor andere landen.",
+    yr20: "Onderzoek: 2020-2021 (Japan)",
+    yr25: "Onderzoek: 2025-2026 (Japan)",
     shitte: [
       { title: "De woorden \"jonge mantelzorger\"", body: "Kinderen en jongeren die regelmatig voor een familielid zorgen of het huishouden draaiende houden, worden \"jonge mantelzorgers\" genoemd. Bijvoorbeeld: geen tijd voor huiswerk of hobby's door zorg en taken, afspraken met vrienden vaak afzeggen, 's nachts opstaan voor een familielid. Als zulke dagen aanhouden, is dat wat de term betekent." },
       { title: "Over de inzet", body: "Een huishouden draaien en voor een familielid zorgen is zwaar werk, zelfs voor volwassenen. Hulpverleners beschrijven jongeren die dit doen als mensen die iets bijzonders presteren. Ook is bekend dat juist zij zelf vaak vinden dat het \"niets bijzonders\" is." },
@@ -1233,11 +1273,11 @@ window.KYUKEI_LANG = {
     fsNormal: "Normaal",
     fsLarge: "Groot",
     fsXL: "Extra groot",
-    privacyNote: "Alles blijft op dit apparaat. Er wordt nooit iets ergens naartoe gestuurd.",
+    privacyNote: "Alles blijft op dit apparaat. Er wordt nooit iets ergens naartoe gestuurd. Memo's gaan niet mee naar een nieuw apparaat.",
     credit: "App-ontwikkeling: SOYOGI - Adviespunt voor zorg en ondersteuning",
-    version: "Versie 1.14",
+    version: "Versie 1.15",
     introOk: "Begrepen",
-    intro: "Deze kamer heeft een verborgen functie.\nTik {n} keer achter elkaar op de naam \"{name}\" bovenaan,\ndan openen de memokamer en de instellingen.\nDeze melding wordt nooit meer getoond."
+    intro: "Deze kamer heeft een verborgen functie.\nTik {n} keer achter elkaar op de naam \"{name}\" bovenaan,\ndan openen de memokamer en de instellingen.\nHulplijnen staan onderaan onder \"{mado}\".\nDeze melding wordt nooit meer getoond."
   },
 
   sv: {
@@ -1247,6 +1287,9 @@ window.KYUKEI_LANG = {
     tab: { hitoiki: "Andas", onaji: "Siffror", shitte: "Grunder", madoguchi: "Kontakter" },
     breathIn: "Andas in…",
     breathOut: "Andas ut…",
+    breathLeft: "{n} kvar",
+    breathDone: "Här går det bra att sluta. Det går också bra att fortsätta.",
+    breathAria: "Cirkel som visar andningen. Andas in i 4 sekunder, andas ut i 6 sekunder.",
     onelines: [
       "Långsam andning hjälper hjärtat att lugna sig.",
       "Redan tre djupa andetag kan göra skillnad.",
@@ -1254,6 +1297,8 @@ window.KYUKEI_LANG = {
       "Att vila och att lata sig räknas som två olika saker."
     ],
     onajiNote: "Siffrorna bygger på Japans nationella undersökningar (2020-2021, 2025-2026) och på angivna källor för andra länder.",
+    yr20: "Undersökning: 2020-2021 (Japan)",
+    yr25: "Undersökning: 2025-2026 (Japan)",
     shitte: [
       { title: "Orden \"ung omsorgsgivare\"", body: "Barn och unga som regelbundet tar hand om en familjemedlem eller sköter hemmet kallas \"unga omsorgsgivare\". Till exempel: ingen tid för läxor eller fritid på grund av omsorg och sysslor, ofta tacka nej till kompisar, gå upp på natten för en familjemedlem. När sådana dagar fortsätter är det just det ordet betyder." },
       { title: "Om insatsen", body: "Att sköta ett hem och ta hand om en familjemedlem är hårt arbete, även för vuxna. De som arbetar med stöd beskriver unga som gör detta som personer som gör något anmärkningsvärt. Det är också känt att de själva ofta tycker att det \"inte är något särskilt\"." },
@@ -1384,11 +1429,11 @@ window.KYUKEI_LANG = {
     fsNormal: "Normal",
     fsLarge: "Stor",
     fsXL: "Extra stor",
-    privacyNote: "Allt stannar på den här enheten. Ingenting skickas någonsin någonstans.",
+    privacyNote: "Allt stannar på den här enheten. Ingenting skickas någonsin någonstans. Anteckningarna följer inte med till en ny enhet.",
     credit: "Apputveckling: SOYOGI - Rådgivning för omsorg och stöd",
-    version: "Version 1.14",
+    version: "Version 1.15",
     introOk: "Förstått",
-    intro: "Det här rummet har en dold funktion.\nTryck på namnet \"{name}\" högst upp {n} gånger i rad,\nså öppnas anteckningsrummet och inställningarna.\nDet här meddelandet visas aldrig igen."
+    intro: "Det här rummet har en dold funktion.\nTryck på namnet \"{name}\" högst upp {n} gånger i rad,\nså öppnas anteckningsrummet och inställningarna.\nHjälplinjer finns längst ner under \"{mado}\".\nDet här meddelandet visas aldrig igen."
   },
 
   ko: {
@@ -1398,6 +1443,9 @@ window.KYUKEI_LANG = {
     tab: { hitoiki: "숨쉬기", onaji: "데이터", shitte: "알아두기", madoguchi: "창구" },
     breathIn: "들이쉬고…",
     breathOut: "내쉬고…",
+    breathLeft: "{n}번 남음",
+    breathDone: "여기서 멈춰도 좋아요. 계속해도 괜찮아요.",
+    breathAria: "호흡을 안내하는 원. 4초 들이쉬고 6초 내쉽니다.",
     onelines: [
       "천천히 숨을 쉬면 심장 박동이 차분해지는 것으로 알려져 있습니다.",
       "깊은 숨 세 번만으로도 달라진다고 합니다.",
@@ -1405,6 +1453,8 @@ window.KYUKEI_LANG = {
       "쉬는 것과 게으름은 서로 다른 것으로 여겨집니다."
     ],
     onajiNote: "숫자는 일본의 전국 조사(2020-2021, 2025-2026)와 각 나라별로 표기된 출처에 근거합니다.",
+    yr20: "조사: 2020-2021년 (일본)",
+    yr25: "조사: 2025-2026년 (일본)",
     shitte: [
       { title: "'영 케어러'라는 말", body: "가족을 돌보거나 집안일을 도맡아 하는 어린이·청소년을 '영 케어러'라고 부릅니다. 예를 들어 돌봄과 집안일 때문에 숙제나 동아리 시간이 없다, 친구의 제안을 자주 거절한다, 밤중에 가족 때문에 일어난다. 이런 날들이 계속되는 상태를 가리키는 말입니다." },
       { title: "노력에 대한 평가", body: "집안일과 가족 돌봄은 어른에게도 힘든 일입니다. 이를 해내는 10대에 대해 지원 현장에서는 \"대단한 일을 하고 있다\"고 평가합니다. 정작 본인일수록 \"별것 아니다\"라고 느끼기 쉽다는 것도 알려져 있습니다." },
@@ -1535,11 +1585,11 @@ window.KYUKEI_LANG = {
     fsNormal: "보통",
     fsLarge: "크게",
     fsXL: "아주 크게",
-    privacyNote: "기록은 이 기기 안에만 있습니다. 어디에도 전송되지 않습니다.",
+    privacyNote: "기록은 이 기기 안에만 있습니다. 어디에도 전송되지 않습니다. 기기를 바꾸면 메모는 옮겨지지 않습니다.",
     credit: "앱 개발: SOYOGI - 돌봄과 지원 상담소",
-    version: "버전 1.14",
+    version: "버전 1.15",
     introOk: "알겠어요",
-    intro: "이 방에는 숨겨진 기능이 있습니다.\n맨 위의 \"{name}\" 이름을 {n}번 연달아 탭하면\n메모의 방과 설정이 열립니다.\n이 안내는 두 번 다시 표시되지 않습니다."
+    intro: "이 방에는 숨겨진 기능이 있습니다.\n맨 위의 \"{name}\" 이름을 {n}번 연달아 탭하면\n메모의 방과 설정이 열립니다.\n도움을 받을 수 있는 곳은 아래 \"{mado}\"에 있습니다.\n이 안내는 두 번 다시 표시되지 않습니다."
   },
 
   zh: {
@@ -1549,6 +1599,9 @@ window.KYUKEI_LANG = {
     tab: { hitoiki: "呼吸", onaji: "数据", shitte: "常识", madoguchi: "窗口" },
     breathIn: "吸气…",
     breathOut: "呼气…",
+    breathLeft: "还剩{n}次",
+    breathDone: "到这里可以停下了。继续也没关系。",
+    breathAria: "呼吸引导圆圈。吸气4秒，呼气6秒。",
     onelines: [
       "缓慢的呼吸有助于让心跳平静下来。",
       "据说哪怕三次深呼吸也会有帮助。",
@@ -1556,6 +1609,8 @@ window.KYUKEI_LANG = {
       "休息和偷懒,被认为是两回事。"
     ],
     onajiNote: "数字基于日本的全国调查(2020-2021, 2025-2026)以及各国注明的出处。",
+    yr20: "调查：2020-2021年（日本）",
+    yr25: "调查：2025-2026年（日本）",
     shitte: [
       { title: "\"年轻照顾者\"这个词", body: "经常照顾家人或操持家务的儿童和青少年,被称为\"年轻照顾者\"。例如:因为照顾和家务没有时间做作业或参加社团;经常拒绝朋友的邀请;半夜为家人起床。当这样的日子持续下去,就是这个词所指的状态。" },
       { title: "关于付出的评价", body: "家务和照顾家人,即使对大人来说也是辛苦的工作。对于承担这些的青少年,支援一线的评价是\"在做了不起的事\"。同时也众所周知,越是本人越容易觉得\"没什么大不了\"。" },
@@ -1686,11 +1741,11 @@ window.KYUKEI_LANG = {
     fsNormal: "标准",
     fsLarge: "大",
     fsXL: "特大",
-    privacyNote: "记录只保存在这台设备里,不会发送到任何地方。",
+    privacyNote: "记录只保存在这台设备里,不会发送到任何地方。更换设备后,便签不会转移到新设备。",
     credit: "应用开发: SOYOGI - 照护与支援咨询处",
-    version: "版本 1.14",
+    version: "版本 1.15",
     introOk: "知道了",
-    intro: "这个房间有一个隐藏功能。\n连续点按最上方的名字\"{name}\" {n}次,\n便签的房间和设置就会打开。\n这条提示不会再次显示。"
+    intro: "这个房间有一个隐藏功能。\n连续点按最上方的名字\"{name}\" {n}次,\n便签的房间和设置就会打开。\n求助的地方在下方的\"{mado}\"。\n这条提示不会再次显示。"
   },
 
   ar: {
@@ -1700,6 +1755,9 @@ window.KYUKEI_LANG = {
     tab: { hitoiki: "تنفّس", onaji: "أرقام", shitte: "أساسيات", madoguchi: "جهات" },
     breathIn: "شهيق…",
     breathOut: "زفير…",
+    breathLeft: "المتبقي: {n}",
+    breathDone: "هذا وقت مناسب للتوقف. ويمكن المتابعة أيضًا.",
+    breathAria: "دائرة ترشد التنفس. شهيق لمدة 4 ثوانٍ وزفير لمدة 6 ثوانٍ.",
     onelines: [
       "التنفّس البطيء يساعد على تهدئة ضربات القلب.",
       "حتى ثلاثة أنفاس عميقة يمكن أن تُحدث فرقًا.",
@@ -1707,6 +1765,8 @@ window.KYUKEI_LANG = {
       "الراحة والكسل يُعتبران شيئين مختلفين."
     ],
     onajiNote: "تستند الأرقام إلى المسوح الوطنية اليابانية (2020-2021, 2025-2026) وإلى المصادر المذكورة للبلدان الأخرى.",
+    yr20: "المسح: 2020-2021 (اليابان)",
+    yr25: "المسح: 2025-2026 (اليابان)",
     shitte: [
       { title: "كلمة «مقدم رعاية يافع»", body: "يُطلق اسم «مقدمي الرعاية اليافعين» على الأطفال والمراهقين الذين يعتنون بانتظام بأحد أفراد الأسرة أو يديرون شؤون البيت. مثلًا: لا وقت للواجبات أو الهوايات بسبب الرعاية والأعمال المنزلية، ورفض دعوات الأصدقاء كثيرًا، والاستيقاظ ليلًا من أجل أحد أفراد الأسرة. حين تستمر أيام كهذه، فهذا ما تعنيه الكلمة." },
       { title: "عن تقدير الجهد", body: "الأعمال المنزلية ورعاية أحد أفراد الأسرة عمل شاق حتى على الكبار. والعاملون في مجال الدعم يصفون اليافعين الذين يقومون بذلك بأنهم يفعلون شيئًا رائعًا. ومن المعروف أيضًا أن أصحاب الشأن أنفسهم يميلون إلى الشعور بأنه «شيء عادي»." },
@@ -1837,11 +1897,11 @@ window.KYUKEI_LANG = {
     fsNormal: "عادي",
     fsLarge: "كبير",
     fsXL: "كبير جدًا",
-    privacyNote: "كل شيء يبقى على هذا الجهاز. لا يُرسل أي شيء إلى أي مكان أبدًا.",
+    privacyNote: "كل شيء يبقى على هذا الجهاز. لا يُرسل أي شيء إلى أي مكان أبدًا. لا تنتقل المذكرات إلى جهاز جديد.",
     credit: "تطوير التطبيق: SOYOGI - مركز استشارات الرعاية والدعم",
-    version: "الإصدار 1.14",
+    version: "الإصدار 1.15",
     introOk: "فهمت",
-    intro: "لهذه الغرفة خاصية مخفية.\nانقر على الاسم «{name}» في الأعلى {n} مرات متتالية\nفتُفتح غرفة المذكرات والإعدادات.\nلن يظهر هذا التنبيه مرة أخرى أبدًا."
+    intro: "لهذه الغرفة خاصية مخفية.\nانقر على الاسم «{name}» في الأعلى {n} مرات متتالية\nفتُفتح غرفة المذكرات والإعدادات.\nجهات المساعدة موجودة في الأسفل ضمن «{mado}».\nلن يظهر هذا التنبيه مرة أخرى أبدًا."
   }
 
 };

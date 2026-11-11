@@ -700,6 +700,62 @@ try{ sandbox.applyBarSpace(); }catch(e){ guardOk = false; }
 documentStub.documentElement.style = savedStyle;
 check('style.setProperty が無い環境でも applyBarSpace が例外を出さない', guardOk);
 
+/* ---- [v1.15] 呼吸の回数とやめどき / 読み上げラベル / データの調査年度 / 初回案内のまどぐち ---- */
+console.log('[v1.15] 呼吸の回数・読み上げ・調査年度・初回案内');
+{
+  const circle = byId('breath-circle');
+  sandbox.setLang('ja');
+  (circle._ev.animationstart || []).forEach(h => h());
+  check('呼吸: 始まりは「あと 3 回」', byId('breath-count').textContent === 'あと 3 回');
+  (circle._ev.animationiteration || []).forEach(h => h());
+  check('呼吸: 1周で「あと 2 回」', byId('breath-count').textContent === 'あと 2 回');
+  (circle._ev.animationiteration || []).forEach(h => h());
+  (circle._ev.animationiteration || []).forEach(h => h());
+  check('呼吸: 3周でやめどきの一言', byId('breath-count').textContent === KL.ja.breathDone);
+  (circle._ev.animationiteration || []).forEach(h => h());
+  check('呼吸: そのあとも数が戻らず一言のまま', byId('breath-count').textContent === KL.ja.breathDone);
+  (circle._ev.animationstart || []).forEach(h => h());
+  check('呼吸: 円が始まり直すと数え直し', byId('breath-count').textContent === 'あと 3 回');
+  check('呼吸の円に読み上げ用の説明(aria-label)が入る', byId('breath-circle').getAttribute('aria-label') === KL.ja.breathAria);
+  check('🌐ボタンの aria-label が言語名つきで入る', byId('btn-lang').getAttribute('aria-label') === KL.ja.langTitle);
+  check('index.html: 呼吸の円は role=img・タブの絵文字は aria-hidden', /id="breath-circle"[^>]*role="img"/.test(html) && (html.match(/class="tab-ico" aria-hidden="true"/g) || []).length === 4);
+  /* データ: 日本の調査のカードに年度(0〜2=令和2〜3年度・3=令和7年度・ひとりの時間は無し) */
+  const notesOf = () => byId('onaji-list').children.filter(c => c.className === 'card').map(c => c.children.filter(x => x.className === 'card-note').map(x => x.textContent));
+  const jn = notesOf();
+  check('データ ja: 4枚に年度・最後の1枚には無い', JSON.stringify(jn.map(a => a.length)) === '[1,1,1,1,0]');
+  check('データ ja: 年度の中身(令和2〜3年度×3・令和7年度)', jn[0][0] === '調査: 令和2〜3年度' && jn[1][0] === '調査: 令和2〜3年度' && jn[2][0] === '調査: 令和2〜3年度' && jn[3][0] === '調査: 令和7年度');
+  sandbox.setLang('en');
+  const en = notesOf();
+  check('データ en: 6枚中 先頭4枚に年度(Around the world と最後には無い)', JSON.stringify(en.map(a => a.length)) === '[1,1,1,1,0,0]' && en[3][0] === KL.en.yr25);
+  sandbox.setLang('ja');
+  /* 初回案内: まどぐちの位置を一行で。全言語で {mado} が実際のタブ名に置き換わる */
+  const codes = Object.keys(KL);
+  let madoOk = true;
+  codes.forEach(c => {
+    const t = sandbox.tpl(KL[c].intro, { name: 'N', n: 3, mado: KL[c].tab.madoguchi });
+    if(!t.includes(KL[c].tab.madoguchi) || t.includes('{mado}') || !KL[c].intro.includes('{mado}')) madoOk = false;
+  });
+  check('初回案内: 12言語すべてに「まどぐち」の位置の一行が入る', codes.length === 12 && madoOk);
+  sandbox.setIntroText();
+  check('初回案内 ja: 実際の表示に「まどぐち」', byId('intro-text').textContent.includes('「まどぐち」にあります'));
+  const keys = ['breathLeft','breathDone','breathAria','yr20','yr25'];
+  check('新キー5つが12言語すべてにあり、ダッシュ(— –)が無い', codes.every(c => keys.every(k => typeof KL[c][k] === 'string' && KL[c][k].length > 0 && !/[—–]/.test(KL[c][k]))));
+  check('breathLeft は全言語で {n} を含む', codes.every(c => KL[c].breathLeft.includes('{n}')));
+  check('style.css: みため/せっていの入口(.link-set)は 44px 以上', /\.link-set\{[^}]*min-height:44px/.test(cssTxt));
+  /* 初回案内の「まどぐち」の一行は、同じ文の {name} と同じ引用符を使う */
+  const quoteOf = (s, key) => { const i = s.indexOf(key); return [s[i - 1], s[i + key.length]]; };
+  const sameQuote = c => {
+    const s = KL[c].intro, a = quoteOf(s, '{name}'), b = quoteOf(s, '{mado}');
+    return a[0] === b[0] && a[1] === b[1];
+  };
+  check('初回案内: 「まどぐち」の引用符が {name} とそろう(12言語)', codes.every(sameQuote));
+  /* 案202: 隠しせっていの説明に「端末を替えるとメモは引き継がれない」(12言語・ja は文言を固定) */
+  check('privacyNote ja: 端末を替えてもメモは引き継がれない一文', KL.ja.privacyNote === '記録はこの端末の中だけ。どこにも送信されません。端末を替えても、メモは引き継がれません');
+  check('privacyNote en: 前の文のあとに一文', KL.en.privacyNote === 'Everything stays on this device. Nothing is ever sent anywhere. Memos are not carried over to a new device.');
+  check('privacyNote: 12言語とも入っていて、ダッシュが無い', codes.every(c => typeof KL[c].privacyNote === 'string' && KL[c].privacyNote.length > 0 && !/[—–]/.test(KL[c].privacyNote)));
+  check('index.html: privacyNote の初期値も ja と同じ', html.includes('data-i18n="privacyNote">' + KL.ja.privacyNote + '<'));
+}
+
 console.log('');
 if(fails.length){ console.log('SMOKE NG: ' + fails.length + '件失敗'); process.exit(1); }
 console.log('SMOKE OK: 全チェック通過');

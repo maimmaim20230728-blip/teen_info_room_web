@@ -40,10 +40,11 @@
   <!-- ① ひといき(初期表示) -->
   <section id="scr-hitoiki" class="screen">
     <div class="breath-wrap">
-      <div id="breath-circle" class="breath-circle">
+      <div id="breath-circle" class="breath-circle" role="img">
         <span id="breath-phase" class="breath-phase"></span>
       </div>
     </div>
+    <div id="breath-count" class="breath-count"></div>
     <div id="oneline" class="oneline" role="button" tabindex="0"></div>
     <!-- みため(いろ/もじ)の入口。フッターの上・目立たない下線リンク(アクセシビリティは隠さず見える場所に) -->
     <div class="memo-foot"><span id="open-looks" class="link-set" role="button" tabindex="0" data-i18n="looksOpen">みため(いろ と もじ)</span></div>
@@ -71,10 +72,10 @@
 
 <!-- 下タブ(4)。メモは下タブに置かない(v0.1裁定: 存在を隠す。開くのはアプリ名の連打だけ) -->
 <nav id="tabbar">
-  <button class="tab active" data-scr="hitoiki"><span class="tab-ico">🌙</span><span class="tab-lb" data-i18n="tab.hitoiki">ひといき</span></button>
-  <button class="tab" data-scr="onaji"><span class="tab-ico">👥</span><span class="tab-lb" data-i18n="tab.onaji">データ</span></button>
-  <button class="tab" data-scr="shitte"><span class="tab-ico">💡</span><span class="tab-lb" data-i18n="tab.shitte">しっておく</span></button>
-  <button class="tab" data-scr="madoguchi"><span class="tab-ico">✉️</span><span class="tab-lb" data-i18n="tab.madoguchi">まどぐち</span></button>
+  <button class="tab active" data-scr="hitoiki"><span class="tab-ico" aria-hidden="true">🌙</span><span class="tab-lb" data-i18n="tab.hitoiki">ひといき</span></button>
+  <button class="tab" data-scr="onaji"><span class="tab-ico" aria-hidden="true">👥</span><span class="tab-lb" data-i18n="tab.onaji">データ</span></button>
+  <button class="tab" data-scr="shitte"><span class="tab-ico" aria-hidden="true">💡</span><span class="tab-lb" data-i18n="tab.shitte">しっておく</span></button>
+  <button class="tab" data-scr="madoguchi"><span class="tab-ico" aria-hidden="true">✉️</span><span class="tab-lb" data-i18n="tab.madoguchi">まどぐち</span></button>
 </nav>
 
 <!-- メモの部屋(そよぎポケット方式: 書いたら見えない・アプリ名連打でだけ開く一体型)。
@@ -148,9 +149,9 @@
     </div>
 
     <div class="set-block">
-      <p class="set-note" data-i18n="privacyNote">記録はこの端末の中だけ。どこにも送信されません</p>
+      <p class="set-note" data-i18n="privacyNote">記録はこの端末の中だけ。どこにも送信されません。端末を替えても、メモは引き継がれません</p>
       <p class="credit"><a id="credit-link" class="credit-link" href="https://soudansoyogi.com/" target="_blank" rel="noopener" data-i18n="credit">アプリ開発：介護と支援の相談どころ　そよぎ</a></p>
-      <p class="credit-ver" data-i18n="version">バージョン 1.14</p>
+      <p class="credit-ver" data-i18n="version">バージョン 1.15</p>
     </div>
 
     <button id="settings-close" class="btn-line" data-i18n="close2">とじる</button>

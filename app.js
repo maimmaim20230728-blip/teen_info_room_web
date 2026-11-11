@@ -1,4 +1,4 @@
-/* 10代の情報室 / Teen Info Room v1.14(世界版=12言語 ja/en/de/fr/es/it/pt/nl/sv/ko/zh/ar)
+/* 10代の情報室 / Teen Info Room v1.15(世界版=12言語 ja/en/de/fr/es/it/pt/nl/sv/ko/zh/ar)
    ・v1.6: しっておくの下に「障害のある家族がいるとき」(理由の例5・話すときの例2・勉強や物の工夫3)。例文はタップでコピー。
    ・家族の世話をしている子ども・若者(ヤングケアラー)本人が、夜にひとりで休める部屋。
    ・端末内(localStorage)のみ。送信・アカウント・分析なし(裁定・DESIGN_MEMO §5)。
@@ -346,6 +346,17 @@ function beginBreath(){
   phaseTimer = setTimeout(() => { breathPhase = 'out'; setBreathText(); }, 4000);
 }
 
+/* ひといきの「あと何回」とやめどき。表示を開いてから3周(1周=10秒)で「ここで ひと区切り」。画面はそのまま・小さな文字だけ。
+   別のタブへ行って戻ると円のアニメが始まり直す(animationstart)ので、数え直しになる */
+const BREATH_ROUNDS = 3;
+let breathLeft = BREATH_ROUNDS;
+function setBreathCount(){
+  const e = getEl('breath-count');
+  if(e) e.textContent = (breathLeft > 0) ? tpl(T('breathLeft'), { n: breathLeft }) : T('breathDone');
+}
+function breathRoundStart(){ breathLeft = BREATH_ROUNDS; setBreathCount(); }
+function breathRoundDone(){ if(breathLeft > 0) breathLeft--; setBreathCount(); }
+
 let onelineIdx = 0;
 function showOneline(){ const o = getEl('oneline'); if(o) o.textContent = T('onelines')[onelineIdx]; }
 function nextOneline(){ onelineIdx = (onelineIdx + 1) % T('onelines').length; showOneline(); }
@@ -354,10 +365,13 @@ function nextOneline(){ onelineIdx = (onelineIdx + 1) % T('onelines').length; sh
 function buildOnaji(){
   const box = getEl('onaji-list');
   box.textContent = '';
-  (ONAJI[lang] || ONAJI.en).forEach(c => {
+  (ONAJI[lang] || ONAJI.en).forEach((c, idx) => {
     const card = el('div', 'card');
     card.appendChild(el('div', 'card-title', c.title));
     card.appendChild(el('div', 'card-body', c.body));
+    /* どの調査の何年度かを、日本の調査のカードごとに小さく添える(0〜2枚目=令和2〜3年度・3枚目=令和7年度)。世界のカードは本文に出典と年が入っている */
+    const yr = (idx <= 2) ? 'yr20' : (idx === 3) ? 'yr25' : null;
+    if(yr) card.appendChild(el('div', 'card-note', T(yr)));
     box.appendChild(card);
   });
   box.appendChild(el('p', 'card-note', T('onajiNote')));   // 末尾の出典注記
@@ -665,7 +679,10 @@ function applyLang(){
   buildOnaji(); buildShitte(); buildFamily(); buildMadoguchi();
   if(onelineIdx >= T('onelines').length) onelineIdx = 0;
   showOneline();
-  setBreathText();
+  setBreathText(); setBreathCount();
+  /* 読み上げ(TalkBack など)向け: 呼吸の円の短い説明と、🌐ボタンの名前を、いまの言語で */
+  const bc = getEl('breath-circle'); if(bc) bc.setAttribute('aria-label', T('breathAria'));
+  const bl = getEl('btn-lang'); if(bl) bl.setAttribute('aria-label', T('langTitle'));
   buildTapChoices(); buildBgmToggle(); buildLangChoices(); buildLooksChoices();
   if(getEl('intro') && !getEl('intro').classList.contains('hidden')) setIntroText();
 }
@@ -674,7 +691,7 @@ function applyLang(){
    文言は原案どおり(lang.jsの intro テンプレート)。{name}=アプリ名・{n}=現在の設定回数を反映。
    一度「わかった」を押すと introShown=true で以後は永遠に出さない。 */
 function setIntroText(){
-  getEl('intro-text').textContent = tpl(T('intro'), { name: appName(), n: prefs.memoTaps });
+  getEl('intro-text').textContent = tpl(T('intro'), { name: appName(), n: prefs.memoTaps, mado: T('tab.madoguchi') });
 }
 function showIntro(){ setIntroText(); getEl('intro').classList.remove('hidden'); }
 function closeIntro(){
@@ -789,8 +806,8 @@ function init(){
   /* ① 呼吸(アニメの周期に合わせて文字を切り替え)+ 一言(タップで順送り) */
   const circle = getEl('breath-circle');
   if(circle){
-    circle.addEventListener('animationstart', beginBreath);
-    circle.addEventListener('animationiteration', beginBreath);
+    circle.addEventListener('animationstart', () => { beginBreath(); breathRoundStart(); });
+    circle.addEventListener('animationiteration', () => { beginBreath(); breathRoundDone(); });
   }
   Tap.bind(getEl('oneline'), nextOneline);
   Tap.bind(getEl('open-settings'), openSettings);   // せっていはメモの部屋の下部からのみ(可視UIには出さない)
