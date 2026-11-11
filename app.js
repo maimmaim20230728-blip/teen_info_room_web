@@ -1,4 +1,4 @@
-/* 10代の情報室 / Teen Info Room v1.13(世界版=12言語 ja/en/de/fr/es/it/pt/nl/sv/ko/zh/ar)
+/* 10代の情報室 / Teen Info Room v1.14(世界版=12言語 ja/en/de/fr/es/it/pt/nl/sv/ko/zh/ar)
    ・v1.6: しっておくの下に「障害のある家族がいるとき」(理由の例5・話すときの例2・勉強や物の工夫3)。例文はタップでコピー。
    ・家族の世話をしている子ども・若者(ヤングケアラー)本人が、夜にひとりで休める部屋。
    ・端末内(localStorage)のみ。送信・アカウント・分析なし(裁定・DESIGN_MEMO §5)。
