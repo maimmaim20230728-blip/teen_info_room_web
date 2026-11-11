@@ -245,6 +245,7 @@ body.fs2{ font-size:23px; }
   background:transparent; color:var(--sub);
   border:1px solid var(--line); border-radius:12px;
   padding:6px 12px; font-size:.778em; cursor:pointer;
+  min-height:44px; min-width:44px;
 }
 
 /* せってい */
